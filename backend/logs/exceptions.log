@@ -1,0 +1,175 @@
+2026-01-13 18:20:05 [[31merror[39m]: uncaughtException: cookieParser is not defined
+ReferenceError: cookieParser is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/server.js:38:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-13 18:20:40 [[31merror[39m]: uncaughtException: cookieParser is not defined
+ReferenceError: cookieParser is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/server.js:38:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-14 16:59:46 [[31merror[39m]: uncaughtException: cors is not defined
+ReferenceError: cors is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/server.js:15:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-14 17:00:14 [[31merror[39m]: uncaughtException: cookieParser is not defined
+ReferenceError: cookieParser is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/server.js:36:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-14 17:06:16 [[31merror[39m]: uncaughtException: authRoutes is not defined
+ReferenceError: authRoutes is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/server.js:40:22
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-14 17:10:26 [[31merror[39m]: uncaughtException: router is not defined
+ReferenceError: router is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/server.js:44:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-14 17:11:39 [[31merror[39m]: uncaughtException: router is not defined
+ReferenceError: router is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/server.js:44:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-14 17:12:26 [[31merror[39m]: uncaughtException: router is not defined
+ReferenceError: router is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/server.js:46:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-14 17:12:55 [[31merror[39m]: uncaughtException: router is not defined
+ReferenceError: router is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/server.js:46:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-14 17:22:19 [[31merror[39m]: uncaughtException: router is not defined
+ReferenceError: router is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/server.js:49:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-14 18:24:25 [[31merror[39m]: uncaughtException: mobile is not defined
+ReferenceError: mobile is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/services/authService.js:5:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-14 18:24:29 [[31merror[39m]: uncaughtException: mobile is not defined
+ReferenceError: mobile is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/services/authService.js:5:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-14 18:24:38 [[31merror[39m]: uncaughtException: mobile is not defined
+ReferenceError: mobile is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/services/authService.js:5:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-14 18:24:43 [[31merror[39m]: uncaughtException: mobile is not defined
+ReferenceError: mobile is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/services/authService.js:5:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-14 18:25:12 [[31merror[39m]: uncaughtException: mobile is not defined
+ReferenceError: mobile is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/services/authService.js:5:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-14 18:25:43 [[31merror[39m]: uncaughtException: mobile is not defined
+ReferenceError: mobile is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/services/authService.js:5:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-16 18:30:03 [[31merror[39m]: uncaughtException: getProjectById is not defined
+ReferenceError: getProjectById is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/routes/projectRoutes.js:18:3
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-18 13:00:53 [[31merror[39m]: uncaughtException: getProjectById is not defined
+ReferenceError: getProjectById is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/routes/projectRoutes.js:18:3
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-18 17:11:16 [[31merror[39m]: uncaughtException: leadRoutes is not defined
+ReferenceError: leadRoutes is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/server.js:49:23
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-18 18:04:27 [[31merror[39m]: uncaughtException: LeadSource is not defined
+ReferenceError: LeadSource is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/models/LeadSource.js:26:16
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-19 15:04:51 [[31merror[39m]: uncaughtException: listTasksByLead is not defined
+ReferenceError: listTasksByLead is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/routes/leadTaskRoutes.js:12:3
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-19 15:04:55 [[31merror[39m]: uncaughtException: listTasksByLead is not defined
+ReferenceError: listTasksByLead is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/routes/leadTaskRoutes.js:9:48
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-19 15:05:00 [[31merror[39m]: uncaughtException: listTasksByLead is not defined
+ReferenceError: listTasksByLead is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/routes/leadTaskRoutes.js:9:43
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-19 15:05:06 [[31merror[39m]: uncaughtException: listAllTasks is not defined
+ReferenceError: listAllTasks is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/routes/leadTaskRoutes.js:11:36
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2026-01-19 16:33:03 [[31merror[39m]: uncaughtException: saveFcmToken is not defined
+ReferenceError: saveFcmToken is not defined
+    at file:///D:/PROJECTS/DivineInfra/backend/src/routes/userRoutes.js:49:3
+    at ModuleJob.run (node:internal/modules/esm/module_job:345:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)

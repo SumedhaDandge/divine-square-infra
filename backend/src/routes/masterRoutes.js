@@ -1,0 +1,41 @@
+import express from "express";
+import authenticateToken from "../middleware/authMiddleware.js";
+import { authorizeRoles } from "../middleware/roleMiddleware.js";
+import {
+  createNearbyDevelopment,
+  createAmenity,
+  listNearbyDevelopments,
+  listAmenities,listLeadSources,
+  createLeadSource,
+} from "../controllers/masterController.js";
+
+
+const router = express.Router();
+
+// CREATE (Admin)
+router.post(
+  "/nearby-development",
+  authenticateToken,
+  authorizeRoles("admin"),
+  createNearbyDevelopment
+);
+router.post(
+  "/amenity",
+  authenticateToken,
+  authorizeRoles("admin"),
+  createAmenity
+);
+
+router.post(
+  "/lead-source",
+  authenticateToken,
+  authorizeRoles("admin"),
+  createLeadSource
+);
+
+// LIST (Dropdown usage)
+router.get("/nearby-development", authenticateToken, listNearbyDevelopments);
+router.get("/amenity", authenticateToken, listAmenities);
+router.get("/lead-source", authenticateToken, listLeadSources);
+
+export default router;
