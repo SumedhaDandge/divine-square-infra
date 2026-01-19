@@ -1,0 +1,217 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+@layer base {
+  :root {
+    /* Divine Square Infra - Real Estate CRM Design System */
+    
+    /* Core Brand Colors */
+    --background: 0 0% 98%;
+    --foreground: 220 20% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 10%;
+
+    /* Primary - Deep Teal (Trust, Growth) */
+    --primary: 168 84% 32%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 168 84% 28%;
+    
+    /* Accent - Warm Gold (Premium) */
+    --accent: 38 92% 50%;
+    --accent-foreground: 220 20% 10%;
+    --accent-glow: 38 92% 60%;
+
+    /* Secondary */
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 20% 25%;
+
+    --muted: 220 14% 95%;
+    --muted-foreground: 220 10% 45%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 90%;
+    --input: 220 13% 90%;
+    --ring: 168 84% 32%;
+
+    --radius: 1rem;
+
+    /* Lead Status Colors */
+    --status-hot: 160 84% 39%;
+    --status-hot-bg: 160 84% 95%;
+    --status-warm: 38 92% 50%;
+    --status-warm-bg: 38 92% 95%;
+    --status-cold: 217 91% 60%;
+    --status-cold-bg: 217 91% 95%;
+    --status-lost: 0 84% 60%;
+    --status-lost-bg: 0 84% 95%;
+    --status-new: 280 70% 60%;
+    --status-new-bg: 280 70% 95%;
+    --status-converted: 168 84% 32%;
+    --status-converted-bg: 168 84% 95%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(168 84% 32%), hsl(168 84% 25%));
+    --gradient-accent: linear-gradient(135deg, hsl(38 92% 50%), hsl(38 92% 45%));
+    --gradient-hero: linear-gradient(180deg, hsl(168 84% 32%) 0%, hsl(168 84% 22%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(220 14% 98%) 100%);
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(220 20% 10% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(220 20% 10% / 0.08), 0 2px 4px -2px hsl(220 20% 10% / 0.05);
+    --shadow-lg: 0 10px 15px -3px hsl(220 20% 10% / 0.08), 0 4px 6px -4px hsl(220 20% 10% / 0.05);
+    --shadow-xl: 0 20px 25px -5px hsl(220 20% 10% / 0.1), 0 8px 10px -6px hsl(220 20% 10% / 0.05);
+    --shadow-card: 0 1px 3px hsl(220 20% 10% / 0.06), 0 1px 2px hsl(220 20% 10% / 0.04);
+    --shadow-fab: 0 6px 16px hsl(168 84% 32% / 0.35);
+
+    /* Bottom Nav */
+    --nav-height: 4.5rem;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .dark {
+    --background: 220 20% 8%;
+    --foreground: 0 0% 98%;
+
+    --card: 220 20% 12%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 220 20% 12%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 168 70% 45%;
+    --primary-foreground: 220 20% 8%;
+
+    --secondary: 220 14% 18%;
+    --secondary-foreground: 0 0% 90%;
+
+    --muted: 220 14% 18%;
+    --muted-foreground: 220 10% 60%;
+
+    --accent: 38 85% 55%;
+    --accent-foreground: 220 20% 8%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 14% 20%;
+    --input: 220 14% 20%;
+    --ring: 168 70% 45%;
+
+    --status-hot-bg: 160 84% 15%;
+    --status-warm-bg: 38 92% 15%;
+    --status-cold-bg: 217 91% 15%;
+    --status-lost-bg: 0 84% 15%;
+    --status-new-bg: 280 70% 15%;
+    --status-converted-bg: 168 84% 15%;
+
+    --gradient-hero: linear-gradient(180deg, hsl(168 70% 45%) 0%, hsl(168 70% 35%) 100%);
+    --shadow-fab: 0 6px 16px hsl(168 70% 45% / 0.4);
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 2px;
+  }
+}
+
+@layer components {
+  /* Mobile App Shell */
+  .app-shell {
+    @apply min-h-screen flex flex-col;
+    padding-bottom: calc(var(--nav-height) + var(--safe-bottom));
+  }
+
+  /* Status Pills */
+  .status-hot {
+    @apply text-[hsl(var(--status-hot))] bg-[hsl(var(--status-hot-bg))];
+  }
+  .status-warm {
+    @apply text-[hsl(var(--status-warm))] bg-[hsl(var(--status-warm-bg))];
+  }
+  .status-cold {
+    @apply text-[hsl(var(--status-cold))] bg-[hsl(var(--status-cold-bg))];
+  }
+  .status-lost {
+    @apply text-[hsl(var(--status-lost))] bg-[hsl(var(--status-lost-bg))];
+  }
+  .status-new {
+    @apply text-[hsl(var(--status-new))] bg-[hsl(var(--status-new-bg))];
+  }
+  .status-converted {
+    @apply text-[hsl(var(--status-converted))] bg-[hsl(var(--status-converted-bg))];
+  }
+
+  /* Touch-friendly buttons */
+  .touch-btn {
+    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+  }
+
+  /* Card styles */
+  .crm-card {
+    @apply bg-card rounded-2xl p-4 shadow-[var(--shadow-card)] border border-border/50;
+  }
+
+  /* Floating Action Button */
+  .fab {
+    @apply fixed right-4 z-50 h-14 w-14 rounded-full flex items-center justify-center;
+    @apply bg-primary text-primary-foreground shadow-[var(--shadow-fab)];
+    @apply active:scale-95 transition-transform;
+    bottom: calc(var(--nav-height) + var(--safe-bottom) + 1rem);
+  }
+
+  /* Bottom Navigation */
+  .bottom-nav {
+    @apply fixed bottom-0 left-0 right-0 z-40;
+    @apply bg-card/95 backdrop-blur-xl border-t border-border;
+    @apply flex items-center justify-around;
+    height: calc(var(--nav-height) + var(--safe-bottom));
+    padding-bottom: var(--safe-bottom);
+  }
+
+  .nav-item {
+    @apply flex flex-col items-center justify-center gap-0.5 py-2 px-4;
+    @apply text-muted-foreground transition-colors;
+  }
+  .nav-item.active {
+    @apply text-primary;
+  }
+  .nav-item.active .nav-icon {
+    @apply bg-primary/10 text-primary;
+  }
+  .nav-icon {
+    @apply w-10 h-8 rounded-full flex items-center justify-center transition-all;
+  }
+}
+
+@layer utilities {
+  .text-gradient-primary {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-primary);
+  }
+}
