@@ -12,6 +12,7 @@ export const AppDataProvider = ({ children }: any) => {
         const [nearbyDevelopments, setNearbyDevelopments] = useState<any[]>([]);
         const [leadSources, setLeadSources] = useState<any[]>([]);
         const [leads, setLeads] = useState<any[]>([]);
+        const [taskByID, setTaskByID] = useState<any[]>([]);
 
         return (
         <AppDataContext.Provider value={{
@@ -19,7 +20,8 @@ export const AppDataProvider = ({ children }: any) => {
             ammenities, setAmmeneities,
             nearbyDevelopments, setNearbyDevelopments ,
             leadSources, setLeadSources,
-            leads, setLeads
+            leads, setLeads,
+            taskByID, setTaskByID
         }}>
             {children}
         </AppDataContext.Provider>

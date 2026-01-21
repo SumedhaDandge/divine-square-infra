@@ -1,5 +1,6 @@
 import AddLead from "@/pages/AddLead";
 import AddProject from "@/pages/AddProject";
+import AddTask from "@/pages/AddTask";
 import Dashboard from "@/pages/Dashboard";
 import LeadDetail from "@/pages/LeadDetail";
 import Leads from "@/pages/Leads";
@@ -23,6 +24,10 @@ export const protectedRoutes = [
   {
     path: "/leads/:leadId",
     element: <LeadDetail />,
+  },
+  {
+    path: "/tasks/new/:leadId",
+    element: <AddTask />,
   },
   {
     path: "/projects",

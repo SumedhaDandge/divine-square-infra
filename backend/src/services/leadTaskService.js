@@ -3,43 +3,39 @@ import { LeadTask } from "../models/LeadTask.js";
 import mongoose from "mongoose";
 
 export const createLeadTaskService = async (payload, userId) => {
-  // ✅ Check lead exists
-  const lead = await Lead.findById(payload.lead);
-  if (!lead) {
-    throw new Error("Lead not found");
+  // ✅ Check Lead exists
+  const leadExists = await Lead.findById(payload.lead);
+  if (!leadExists) {
+    return {
+      statusCode: 404,
+      message: "Lead not found",
+    };
   }
 
-  // ✅ Validate dueDate exists
-  if (!payload.dueDate) {
-    throw new Error("Due date is required");
+  // ✅ Check Assigned User exists
+  const userExists = await User.findById(payload.assignedTo);
+  if (!userExists) {
+    return {
+      statusCode: 404,
+      message: "Assigned user not found",
+    };
   }
 
-  // ✅ Normalize date
-  const dueDate = new Date(payload.dueDate);
-
-  if (isNaN(dueDate.getTime())) {
-    throw new Error("Invalid due date");
-  }
-
-  // ✅ BACK DATE VALIDATION (IST BUSINESS LOGIC)
-  const now = new Date();
-
-  // Compare only by time (not milliseconds noise)
-  if (dueDate < now) {
-    throw new Error("Back-dated tasks are not allowed");
-  }
-
+  // ✅ Create task
   const task = await LeadTask.create({
-    ...payload,
-    dueDate,
+    lead: payload.lead,
+    assignedTo: payload.assignedTo,
+    taskType: payload.taskType,
+    remark: payload.remark,
+    taskDate: payload.taskDate,
+    taskTime: payload.taskTime,
     createdBy: userId,
-    assignedTo: payload.assignedTo || userId
   });
 
   return {
     statusCode: 201,
     message: "Task created successfully",
-    data: task
+    data: task,
   };
 };
 
@@ -62,14 +58,29 @@ export const listLeadTasksService = async (leadId) => {
   };
 };
 
-export const listAllTasksService = async (query) => {
+
+
+export const listAllTasksService = async (query, userId) => {
   const filter = {};
 
+  // Status filter
   if (query.status) filter.status = query.status;
+
+  // Task type filter
   if (query.taskType) filter.taskType = query.taskType;
+
+  // Assigned to
   if (query.assignedTo) filter.assignedTo = query.assignedTo;
 
-  // ✅ TODAY FILTER (UTC SAFE)
+  // 🔥 Logged-in user (important for dashboard)
+  if (query.mine === "true") {
+    filter.$or = [
+      { assignedTo: userId },
+      { createdBy: userId },
+    ];
+  }
+
+  // 🔥 Today filter
   if (query.today === "true") {
     const start = new Date();
     start.setHours(0, 0, 0, 0);
@@ -78,10 +89,10 @@ export const listAllTasksService = async (query) => {
     end.setHours(23, 59, 59, 999);
 
     filter.dueDate = { $gte: start, $lte: end };
-  }
 
-  console.log("QUERY PARAMS:", query);
-  console.log("FINAL FILTER:", filter);
+    // Dashboard usually wants pending only
+    filter.status = "pending";
+  }
 
   const tasks = await LeadTask.find(filter)
     .populate("lead", "customerName mobile")

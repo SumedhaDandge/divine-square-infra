@@ -25,87 +25,42 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setErrors({});
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrors({});
 
-  //   const validation = loginSchema.safeParse(formData);
+    const validation = loginSchema.safeParse(formData);
 
-  //   if (!validation.success) {
-  //     const fieldErrors: Record<string, string> = {};
-  //     validation.error.errors.forEach((err) => {
-  //       fieldErrors[String(err.path[0])] = err.message;
-  //     });
-  //     setErrors(fieldErrors);
-  //     return;
-  //   }
-
-  //   try {
-  //     setIsLoading(true);
-
-  //     const response = await divineSquareService.Login(formData);
-
-  //     if (response.status === 200) {
-  //       sessionStorage.setItem("auth_token", response.data.token);
-  //       sessionStorage.setItem("auth_user", JSON.stringify(response.data.user));
-
-  //       toast.success("Login successful");
-  //       navigate("/dashboard", { replace: true });
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast.error("Invalid mobile number or password");
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setErrors({});
-
-  const validation = loginSchema.safeParse(formData);
-
-  if (!validation.success) {
-    const fieldErrors: Record<string, string> = {};
-    validation.error.errors.forEach((err) => {
-      fieldErrors[String(err.path[0])] = err.message;
-    });
-    setErrors(fieldErrors);
-    return;
-  }
-
-  try {
-    setIsLoading(true);
-
-    const response = await divineSquareService.Login(formData);
-
-    if (response.status === 200) {
-      const token = response.data.token;
-
-      // ✅ Save auth data
-      sessionStorage.setItem("auth_token", token);
-      sessionStorage.setItem(
-        "auth_user",
-        JSON.stringify(response.data.user)
-      );
-
-      // 🔔 REGISTER FCM TOKEN (IMPORTANT)
-      registerFcmToken(token); // <-- THIS IS THE CORRECT PLACE
-
-      toast.success("Login successful");
-
-      navigate("/dashboard", { replace: true });
+    if (!validation.success) {
+      const fieldErrors: Record<string, string> = {};
+      validation.error.errors.forEach((err) => {
+        fieldErrors[String(err.path[0])] = err.message;
+      });
+      setErrors(fieldErrors);
+      return;
     }
-  } catch (error) {
-    console.error(error);
-    toast.error("Invalid mobile number or password");
-  } finally {
-    setIsLoading(false);
-  }
-};
 
+    try {
+      setIsLoading(true);
 
+      const response = await divineSquareService.Login(formData);
+      if (response.status === 200) {
+        const token = response.data.token;
+        // ✅ Save auth data
+        sessionStorage.setItem("auth_token", token);
+        sessionStorage.setItem("auth_user", JSON.stringify(response.data.user));
+        // 🔔 REGISTER FCM TOKEN (IMPORTANT)
+        registerFcmToken(token); 
+        toast.success("Login successful");
+        navigate("/dashboard", { replace: true });
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Invalid mobile number or password");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-primary flex flex-col">

@@ -7,8 +7,16 @@ import { messaging } from "./config/firebase";
 import { setupNotificationListener } from "./utils/notificationListener";
 import Login from "./pages/Login";
 
+// Website Pages
+import { WebsiteLayout } from "./components/website/layout/WebsiteLayout";
+import HomePage from "./pages/website/HomePage";
+import PublicProjects from "./pages/website/PublicProjects";
+import ProjectDetailPublic from "./pages/website/ProjectDetailPublic";
+import AboutPage from "./pages/website/AboutPage";
+import ContactPage from "./pages/website/ContactPage";
+
 const AppRoutes = () => {
-  const navigate = useNavigate(); // ✅ VALID (inside Router)
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     setupNotificationListener(messaging, navigate);
@@ -16,10 +24,19 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-      {/* Public */}
+      {/* Public Website Routes */}
+      <Route element={<WebsiteLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/projects-public" element={<PublicProjects />} />
+        <Route path="/projects-public/:projectId" element={<ProjectDetailPublic />} />
+      </Route>
+
+      {/* Auth */}
       <Route path="/login" element={<Login />} />
 
-      {/* Protected */}
+      {/* Protected CRM Routes */}
       <Route element={<PrivateRoutes />}>
         {protectedRoutes.map((route, index) => (
           <Route

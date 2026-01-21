@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { useLeads } from "@/hooks/useLeads";
-import { useTasks } from "@/hooks/useTasks";
+import { useTasks } from "@/hooks/useLeadTasks";
 import { useSiteVisits } from "@/hooks/useSiteVisits";
 import { useQuotations } from "@/hooks/useQuotations";
 import { useProjects } from "@/hooks/useProjects";

@@ -35,12 +35,8 @@ import { handleErrResult } from "../ErrHandler";
   }
   let apiCallCount = 0;
   class Api implements IApi {
-    // _hostName: string = "http://13.233.116.88:9000/api/";
-    // _hostName: string = 'http://192.168.1.26:2000/api/"';
     _hostName: string = `${Base_Url}`;
 
-  
-  
     _axios: AxiosInstance = axios.create({
       // withCredentials: true,
       baseURL: this._hostName,
@@ -77,18 +73,6 @@ import { handleErrResult } from "../ErrHandler";
     }
 
 
-
-
-  //   refreshAxiosInstance() {
-  //     this._axios = axios.create({
-  //       baseURL: this._hostName,
-  //       headers: {
-  //         Authorization: Bearer ${sessionStorage.getItem("auth_token")},
-  //         Accept: "application/json",
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //   }
   
     private _handleResult<T>(result: AxiosResponse<T>) {
       apiCallCount--;

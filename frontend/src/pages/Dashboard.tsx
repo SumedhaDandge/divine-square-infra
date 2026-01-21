@@ -5,8 +5,7 @@ import { PipelineBar } from "@/components/dashboard/PipelineBar";
 import { Users, PhoneCall, MapPin, TrendingUp, Calendar, AlertCircle, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { useLeads } from "@/hooks/useLeads";
-import { useTasks } from "@/hooks/useTasks";
+
 import { useSiteVisits } from "@/hooks/useSiteVisits";
 import { format, isToday, isPast, isFuture } from "date-fns";
 

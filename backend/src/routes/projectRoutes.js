@@ -11,7 +11,7 @@ const router = express.Router();
 router.post(  "/",  authenticateToken,  authorizeRoles("admin"),  createProjectValidator,  validate,  createProject);
 
 // LIST PROJECTS
-router.get("/", authenticateToken, listProjects);
+router.get("/",  listProjects);
 // router.get(
 //   "/:id",
 //   authenticateToken,

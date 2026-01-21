@@ -1,18 +1,16 @@
 import { api } from "../Api";
 
-
-
-class DivineSquareApi  {
+class DivineSquareApi {
   _urlMapping = {
     LOGIN: "/auth/login",
 
-    PROJECT : "/projects",
+    PROJECT: "/projects",
 
-    AMMENITIES : "/masters/amenity",
-    NEARBY_DEVELOPMENTS : "/masters/nearby-development",
-    LEAD_SOURCES : "/masters/lead-source",
-    LEADS : "/leads",
-    LEAD_TASKS : "/lead-tasks"
+    AMMENITIES: "/masters/amenity",
+    NEARBY_DEVELOPMENTS: "/masters/nearby-development",
+    LEAD_SOURCES: "/masters/lead-source",
+    LEADS: "/leads",
+    LEAD_TASKS: "/lead-tasks",
   };
 
   Login(data: any): Promise<any> {
@@ -66,9 +64,16 @@ class DivineSquareApi  {
   }
 
   listLeadTasks(leadId: string): Promise<any> {
-    return api._get(`${this._urlMapping.LEAD_TASKS}?lead=${leadId}`);
+    return api._get(`${this._urlMapping.LEAD_TASKS}/${leadId}`);
   }
 
+  listLeadTasksById(leadId: string): Promise<any> {
+    return api._get(`${this._urlMapping.LEAD_TASKS}/${leadId}`);
+  }
+
+  createLeadTask(data: any): Promise<any> {
+    return api._get(`${this._urlMapping.LEAD_TASKS}`);
+  }
 }
 
 const divineSquareApi = new DivineSquareApi();

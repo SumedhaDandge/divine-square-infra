@@ -14,7 +14,6 @@ export const registerFcmToken = async (
       console.log("❌ Notification permission denied");
       return;
     }
-
     const fcmToken: string | null = await getToken(messaging, {
       vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY as string,
     });
@@ -23,11 +22,9 @@ export const registerFcmToken = async (
       console.log("❌ FCM token not generated");
       return;
     }
-
-    console.log("✅ FCM TOKEN:", fcmToken);
-
+    // console.log("✅ FCM TOKEN:", fcmToken);
     await axios.post(
-      `${Base_Url}users/save-fcm-token`,
+      `${Base_Url}/users/save-fcm-token`,
       { fcmToken },
       {
         headers: {

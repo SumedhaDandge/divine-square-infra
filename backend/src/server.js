@@ -15,6 +15,8 @@ import projectRoutes from "./routes/projectRoutes.js";
 import leadRoutes from "./routes/leadRoutes.js";
 import leadTaskRoutes from "./routes/leadTaskRoutes.js";
 
+import "./cron/taskReminderCron.js";
+
 const app = express();
 
 const allowedOrigins = ["*"];

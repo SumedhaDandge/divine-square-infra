@@ -50,6 +50,14 @@ class DivineSquareService {
     return divineSquareApi.updateLead(leadId, data);
   }
 
+  createLeadTask(data:any): Promise<any> {
+    return divineSquareApi.createLeadTask( data);
+  }
+
+  listLeadTasksById(leadId: string) :Promise<any> {
+    return divineSquareApi.listLeadTasksById( leadId);
+  }
+
 
 }
 
