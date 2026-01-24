@@ -14,6 +14,8 @@ import PublicProjects from "./pages/website/PublicProjects";
 import ProjectDetailPublic from "./pages/website/ProjectDetailPublic";
 import AboutPage from "./pages/website/AboutPage";
 import ContactPage from "./pages/website/ContactPage";
+import BookSiteVisitPage from "./pages/website/BookSiteVisitPage";
+import CareersPage from "./pages/website/CareersPage";
 
 const AppRoutes = () => {
   const navigate = useNavigate(); 
@@ -29,6 +31,8 @@ const AppRoutes = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/book-visit" element={<BookSiteVisitPage />} />
+        <Route path="/careers" element={<CareersPage />} />
         <Route path="/projects-public" element={<PublicProjects />} />
         <Route path="/projects-public/:projectId" element={<ProjectDetailPublic />} />
       </Route>

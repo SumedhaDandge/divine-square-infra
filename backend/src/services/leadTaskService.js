@@ -1,6 +1,7 @@
 import { Lead } from "../models/Lead.js";
 import { LeadTask } from "../models/LeadTask.js";
 import mongoose from "mongoose";
+import User from '../models/User.js'
 
 export const createLeadTaskService = async (payload, userId) => {
   // ✅ Check Lead exists

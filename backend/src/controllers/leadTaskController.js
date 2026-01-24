@@ -15,17 +15,24 @@ export const createLeadTask = async (req, res) => {
 
     const task = result.data;
 
-    const user = await User.findById(task.assignedTo).select("fcmToken");
+    try {
+      const user = await User.findById(task.assignedTo).select("fcmToken");
 
-    await sendFcmNotification({
-      token: user?.fcmToken,
-      title: "New Task Assigned",
-      body: `${task.taskType.toUpperCase()} • ${task.remark}`,
-      data: {
-        taskId: task._id.toString(),
-        type: "TASK_CREATED",
-      },
-    });
+      if (user?.fcmToken) {
+        await sendFcmNotification({
+          token: user.fcmToken,
+          title: "New Task Assigned",
+          body: `${task.taskType.toUpperCase()} • ${task.remark}`,
+          data: {
+            taskId: task._id.toString(),
+            type: "TASK_CREATED",
+          },
+        });
+      }
+    } catch (fcmError) {
+      console.error("FCM Error:", fcmError.message);
+      // ❗ DO NOT throw
+    }
 
     return successResponse(res, 201, "Task created", task);
   } catch (error) {

@@ -144,18 +144,18 @@ export default function PublicProjects() {
 
        <div className="container px-4 pb-24">
           {/* Clean Filter Tabs */}
-          <Reveal delay={100} className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+          <Reveal delay={100} className="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 gap-6">
              <div className="text-gray-400 text-sm font-medium">
                 Showing {filteredProjects?.length || 0} projects
              </div>
              
-             <div className="flex flex-wrap gap-2 bg-white p-1.5 rounded-full border border-gray-200 shadow-sm">
+             <div className="flex flex-wrap justify-center gap-2 bg-white p-1.5 rounded-3xl border border-gray-200 shadow-sm max-w-full">
                 {['all', 'active', 'completed', 'upcoming'].map((status) => (
                     <button
                         key={status}
                         onClick={() => setFilter(status)}
                         className={cn(
-                            "px-6 py-2.5 rounded-full text-sm font-bold transition-all capitalize",
+                            "px-4 md:px-6 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-bold transition-all capitalize",
                             filter === status 
                                 ? "bg-gray-900 text-white shadow-md" 
                                 : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
@@ -170,63 +170,59 @@ export default function PublicProjects() {
           {isLoading ? (
              <div className="flex justify-center py-20"><div className="w-12 h-12 border-4 border-gray-200 border-t-primary rounded-full animate-spin"/></div>
           ) : (
-             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {filteredProjects?.map((project: any, index: number) => (
                    <Reveal key={project._id} delay={index * 100} className="h-full">
                        <Link to={`/projects-public/${project._id}`} className="block h-full group">
-                           <div className="bg-white rounded-3xl border border-gray-100 shadow-lg shadow-gray-200/50 hover:shadow-xl hover:shadow-gray-200/60 transition-all duration-300 h-full flex flex-col overflow-hidden group hover:-translate-y-1">
-                               {/* Image Container - Reduced Height */}
-                               <div className="h-56 overflow-hidden relative">
+                           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-gray-200/40 transition-all duration-300 h-full flex flex-col overflow-hidden hover:-translate-y-1">
+                               {/* Image Container */}
+                               <div className="h-64 overflow-hidden relative">
                                     <img 
                                       src="/hero-image.png" 
                                       alt={project.projectName} 
                                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-50" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
                                     
-                                    <div className="absolute top-4 left-4">
+                                    {/* Status Badge */}
+                                    <div className="absolute top-3 left-3">
                                          <span className={cn(
-                                            "px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider backdrop-blur-md shadow-sm border border-white/10",
-                                            project.status === 'active' ? "bg-emerald-500 text-white" :
-                                            project.status === 'completed' ? "bg-blue-500 text-white" : "bg-amber-500 text-white"
+                                            "px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider backdrop-blur-md border border-white/20 shadow-sm",
+                                            project.status === 'active' ? "bg-emerald-500/90 text-white" :
+                                            project.status === 'completed' ? "bg-blue-500/90 text-white" : "bg-amber-500/90 text-white"
                                          )}>
                                             {project.status}
                                          </span>
                                     </div>
-                                    
-                                    {/* Quick Action Overlay */}
-                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 backdrop-blur-[2px]">
-                                        <span className="bg-white text-gray-900 px-5 py-2.5 rounded-full font-bold text-sm shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 flex items-center gap-2">
-                                            View Details <ArrowUpRight size={16} />
-                                        </span>
+
+                                    {/* Overlay Info */}
+                                    <div className="absolute bottom-4 left-4 right-4 text-white">
+                                        <h3 className="text-xl font-bold leading-tight mb-1 group-hover:text-emerald-300 transition-colors">{project.projectName}</h3>
+                                        <p className="text-white/80 text-xs flex items-center gap-1">
+                                            <MapPin size={12} /> {project.location}
+                                        </p>
                                     </div>
                                </div>
                                
-                               {/* Content Area */}
-                               <div className="p-6 flex flex-col flex-grow">
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors line-clamp-1">{project.projectName}</h3>
-                                    <p className="text-gray-500 text-sm font-medium flex items-center gap-1.5 mb-6">
-                                        <MapPin size={16} className="text-gray-400" /> {project.location}
-                                    </p>
+                               {/* Brief Details */}
+                               <div className="p-4 flex flex-col flex-grow bg-white relative z-10">
+                                    <div className="grid grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-0.5">Price</p>
+                                            <p className="text-sm font-bold text-gray-900">
+                                                ₹{project.priceRange?.min ? (project.priceRange.min / 100000).toFixed(1) + " L" : "On Request"}
+                                            </p>
+                                        </div>
+                                        <div className="text-right">
+                                             <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-0.5">Units</p>
+                                             <p className="text-sm font-bold text-gray-900">{project.totalUnits}</p>
+                                        </div>
+                                    </div>
                                     
-                                    <div className="mt-auto space-y-4">
-                                        {/* Divider */}
-                                        <div className="h-px w-full bg-gray-100" />
-                                        
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div>
-                                                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Starting From</p>
-                                                <p className="text-lg font-bold text-primary">
-                                                    ₹{project.priceRange?.min ? (project.priceRange.min / 100000).toFixed(1) + " L" : "On Request"}
-                                                </p>
-                                            </div>
-                                            <div className="text-right">
-                                                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Total Units</p>
-                                                 <div className="flex items-center justify-end gap-1.5">
-                                                     <Building2 size={16} className="text-gray-300" />
-                                                     <p className="text-lg font-bold text-gray-900">{project.totalUnits}</p>
-                                                 </div>
-                                            </div>
+                                    <div className="mt-auto pt-3 border-t border-gray-50 flex items-center justify-between text-xs font-semibold text-primary">
+                                        <span>View Highlihts</span>
+                                        <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                                            <ArrowUpRight size={14} />
                                         </div>
                                     </div>
                                </div>

@@ -1,23 +1,21 @@
 
-import { Mail, MapPin, Phone, Send, Clock, MessageSquare, ArrowRight, User, MousePointerClick } from "lucide-react";
+import { Mail, MapPin, Phone, Send, Clock, PhoneCall, Facebook, Instagram, Linkedin, Twitter, ArrowRight } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 
-// Reveal Component
+// --- Components ---
+
 const Reveal = ({ children, className, delay = 0 }: { children: React.ReactNode, className?: string, delay?: number }) => {
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsVisible(true);
-                    observer.disconnect();
-                }
-            },
-            { threshold: 0.1 }
-        );
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+                setIsVisible(true);
+                observer.disconnect();
+            }
+        }, { threshold: 0.1 });
         if (ref.current) observer.observe(ref.current);
         return () => observer.disconnect();
     }, []);
@@ -26,8 +24,8 @@ const Reveal = ({ children, className, delay = 0 }: { children: React.ReactNode,
         <div 
             ref={ref} 
             className={cn(
-                "transition-all duration-700 ease-out",
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
+                "transition-all duration-1000 ease-out",
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12",
                 className
             )}
             style={{ transitionDelay: `${delay}ms` }}
@@ -43,116 +41,143 @@ export default function ContactPage() {
   }, []);
 
   return (
-    <div className="min-h-screen pt-20 pb-20 bg-background overflow-hidden px-4 md:px-0">
-      
-      {/* CLEAN HEADER - Solid Color block with clean visuals */}
-      <div className="bg-primary relative py-20 rounded-b-[2.5rem] md:rounded-b-[4rem] mb-12 shadow-2xl">
-         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 mix-blend-overlay"></div>
-         
-         <div className="container px-4 text-center relative z-10">
-            <Reveal>
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-white border border-white/20 mb-6 backdrop-blur-md">
-                   <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                   <span className="text-xs font-bold tracking-widest uppercase">We are here to help</span>
-              </div>
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white tracking-tight">Let's Discuss Your Future</h1>
-              <p className="text-white/80 max-w-xl mx-auto text-lg md:text-xl font-light leading-relaxed">
-                Have questions about our projects or want to schedule a site visit? Reach out to us today.
-              </p>
-            </Reveal>
-        </div>
-      </div>
+    <div className="min-h-screen bg-stone-100 flex flex-col items-center p-0 lg:p-8 relative selection:bg-emerald-500/30 selection:text-emerald-900 overflow-x-hidden">
+        
+        {/* Decorative Background */}
+        <div className="absolute top-0 left-0 w-full h-[60vh] bg-emerald-950 z-0 lg:rounded-b-[3rem] shadow-2xl hidden lg:block" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-900/50 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 z-0 pointer-events-none hidden lg:block" />
 
-      <div className="container px-4 relative z-10 -mt-20">
-        {/* Contact Info Cards */}
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 mb-16">
-           {[
-               { icon: <Phone size={24}/>, title: "Call Us", desc: "Mon-Sat from 10am to 7pm", action: "+91 8767160868", link: "tel:+918767160868" },
-               { icon: <Mail size={24}/>, title: "Email Us", desc: "We'll respond within 24 hours", action: "info@divinesquare.com", link: "mailto:info@divinesquare.com" },
-               { icon: <MapPin size={24}/>, title: "Headquarters", desc: "Wardha Road, Nagpur", action: "Get Directions", link: "#" }
-           ].map((item, i) => (
-             <Reveal key={i} delay={i * 100} className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 text-center hover:-translate-y-2 transition-all duration-300 group">
-                <div className="w-14 h-14 bg-gray-50 text-gray-900 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary group-hover:text-white transition-colors duration-300">
-                  {item.icon}
-                </div>
-                <h3 className="text-xl font-bold mb-2 text-gray-900">{item.title}</h3>
-                <p className="text-gray-500 mb-6 text-sm">{item.desc}</p>
-                <a href={item.link} className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all text-sm uppercase tracking-wide">
-                    {item.action} <ArrowRight size={14} />
-                </a>
-             </Reveal>
-           ))}
-        </div>
+        {/* Mobile Background */}
+        <div className="absolute top-0 left-0 w-full h-[50vh] bg-emerald-950 z-0 lg:hidden" />
 
-        {/* Clean Form & Map Section */}
-        <Reveal delay={300} className="grid lg:grid-cols-2 bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
-           <div className="p-8 md:p-12">
-              <h2 className="text-3xl font-bold mb-4 text-gray-900">Send us a Message</h2>
-              <p className="text-gray-500 mb-10">Fill out the form below and our team will get back to you shortly.</p>
-              
-              <form className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                        <label className="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                           <User size={14} /> First Name
-                        </label>
-                        <input type="text" className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all font-medium outline-none text-gray-900" placeholder="John" />
-                    </div>
-                    <div className="space-y-2">
-                        <label className="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                           <User size={14} /> Last Name
-                        </label>
-                        <input type="text" className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all font-medium outline-none text-gray-900" placeholder="Doe" />
-                    </div>
-                </div>
-
-                <div className="space-y-2">
-                    <label className="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                       <Phone size={14} /> Phone Number
-                    </label>
-                    <input type="tel" className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all font-medium outline-none text-gray-900" placeholder="+91 98765 43210" />
-                </div>
-
-                <div className="space-y-2">
-                    <label className="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                       <MessageSquare size={14} /> Message
-                    </label>
-                    <textarea rows={4} className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all font-medium outline-none resize-none text-gray-900" placeholder="I am interested in..."></textarea>
-                </div>
-
-                <button className="w-full py-4 bg-primary text-white font-bold text-lg rounded-xl hover:bg-primary-hover transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-2 group">
-                    Send Message <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                </button>
-              </form>
-           </div>
-           
-           <div className="bg-gray-100 lg:h-auto h-[400px] relative">
-             <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3721.240755918731!2d79.08815931533056!3d21.14275008593674!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bd4c08d81023a1d%3A0x679457635c916298!2sNagpur%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1625123456789!5m2!1sen!2sin" 
-                width="100%" 
-                height="100%" 
-                style={{border:0}} 
-                allowFullScreen={true} 
-                loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade"
-                className="absolute inset-0 grayscale contrast-125 opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-700"
-             ></iframe>
+        <div className="container relative z-10 max-w-6xl mx-auto pt-32 pb-12 px-4">
              
-             {/* Simple Location Overlay */}
-             <div className="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg border border-white/50 max-w-sm mx-auto">
-                 <div className="flex items-center gap-4">
-                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                        <MapPin className="w-5 h-5 text-primary" />
+             {/* --- Page Header --- */}
+             <Reveal className="text-center mb-12">
+                 <span className="inline-block px-4 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-md">
+                    Contact Us
+                 </span>
+                 <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">
+                    Get in Touch with Us.
+                 </h1>
+                 <p className="text-emerald-100/70 text-lg max-w-2xl mx-auto leading-relaxed font-light">
+                    Have questions about our projects or want to <a href="/book-visit" className="text-white font-bold underline decoration-emerald-400 hover:text-emerald-300 transition-colors">book a site visit</a>? We are always open to discussing new opportunities.
+                 </p>
+             </Reveal>
+
+             <Reveal delay={200}>
+                 {/* Main Unified Card */}
+                 <div className="bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row min-h-[600px]">
+                     
+                     {/* LEFT SIDE: Contact Information (Dark) */}
+                     <div className="lg:w-[40%] bg-emerald-950 text-white p-10 md:p-14 flex flex-col justify-between relative overflow-hidden">
+                         {/* Pattern Overlay */}
+                         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay pointer-events-none" />
+                         <div className="absolute bottom-0 right-0 w-64 h-64 bg-emerald-800 rounded-full blur-[80px] opacity-50 translate-x-1/3 translate-y-1/3" />
+                         
+                         <div className="relative z-10">
+                             <h2 className="text-3xl font-bold mb-4">Contact Information</h2>
+                             <p className="text-emerald-100/70 mb-10 leading-relaxed">
+                                 Fill up the form and our Team will get back to you within 24 hours.
+                             </p>
+
+                             <div className="space-y-8">
+                                 <div className="flex items-start gap-4">
+                                     <PhoneCall className="text-emerald-400 shrink-0 mt-1" size={20} />
+                                     <div>
+                                         <p className="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-1">Phone Number</p>
+                                         <a href="tel:+918767160868" className="text-lg font-medium hover:text-emerald-300 transition-colors block">+91 87671 60868</a>
+                                     </div>
+                                 </div>
+
+                                 <div className="flex items-start gap-4">
+                                     <Mail className="text-emerald-400 shrink-0 mt-1" size={20} />
+                                     <div>
+                                         <p className="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-1">Email Address</p>
+                                         <a href="mailto:info@divinesquare.com" className="text-lg font-medium hover:text-emerald-300 transition-colors block">info@divinesquare.com</a>
+                                     </div>
+                                 </div>
+
+                                 <div className="flex items-start gap-4">
+                                     <MapPin className="text-emerald-400 shrink-0 mt-1" size={20} />
+                                     <div>
+                                         <p className="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-1">Office Address</p>
+                                         <p className="text-lg font-medium leading-snug">Wardha Road, Nagpur, <br/> Maharashtra 440015</p>
+                                     </div>
+                                 </div>
+                                 
+                                 <div className="flex items-start gap-4">
+                                     <Clock className="text-emerald-400 shrink-0 mt-1" size={20} />
+                                     <div>
+                                         <p className="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-1">Working Hours</p>
+                                         <p className="text-lg font-medium">10:00 AM - 07:00 PM</p>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+
+                         {/* Socials */}
+                         <div className="relative z-10 mt-12 pt-12 border-t border-emerald-900 flex gap-4">
+                             {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
+                                 <a key={i} href="#" className="w-10 h-10 rounded-full bg-emerald-900 flex items-center justify-center text-emerald-300 hover:bg-emerald-500 hover:text-white transition-all duration-300">
+                                     <Icon size={18} />
+                                 </a>
+                             ))}
+                         </div>
                      </div>
-                     <div>
-                         <p className="font-bold text-gray-900 text-sm">Divine Square HQ</p>
-                         <p className="text-xs text-gray-500 mt-0.5">Manish Nagar, Nagpur</p>
+
+                     {/* RIGHT SIDE: Form (Light) */}
+                     <div className="lg:w-[60%] p-10 md:p-14 bg-white flex flex-col justify-center">
+                         <form className="space-y-8">
+                             <div className="grid md:grid-cols-2 gap-8">
+                                 <div className="group relative">
+                                     <label className="text-sm font-bold text-gray-500 mb-1 block group-focus-within:text-emerald-600 transition-colors">First Name</label>
+                                     <input type="text" className="w-full border-b border-gray-200 py-3 text-gray-900 font-medium focus:outline-none focus:border-emerald-600 transition-all font-serif" placeholder="John" />
+                                 </div>
+                                 <div className="group relative">
+                                     <label className="text-sm font-bold text-gray-500 mb-1 block group-focus-within:text-emerald-600 transition-colors">Last Name</label>
+                                     <input type="text" className="w-full border-b border-gray-200 py-3 text-gray-900 font-medium focus:outline-none focus:border-emerald-600 transition-all font-serif" placeholder="Doe" />
+                                 </div>
+                             </div>
+
+                             <div className="grid md:grid-cols-2 gap-8">
+                                 <div className="group relative">
+                                     <label className="text-sm font-bold text-gray-500 mb-1 block group-focus-within:text-emerald-600 transition-colors">Email</label>
+                                     <input type="email" className="w-full border-b border-gray-200 py-3 text-gray-900 font-medium focus:outline-none focus:border-emerald-600 transition-all font-serif" placeholder="john@example.com" />
+                                 </div>
+                                 <div className="group relative">
+                                     <label className="text-sm font-bold text-gray-500 mb-1 block group-focus-within:text-emerald-600 transition-colors">Phone</label>
+                                     <input type="tel" className="w-full border-b border-gray-200 py-3 text-gray-900 font-medium focus:outline-none focus:border-emerald-600 transition-all font-serif" placeholder="+91 00000 00000" />
+                                 </div>
+                             </div>
+
+                             <div className="group relative">
+                                 <label className="text-sm font-bold text-gray-500 mb-1 block group-focus-within:text-emerald-600 transition-colors">Message</label>
+                                 <textarea rows={3} className="w-full border-b border-gray-200 py-3 text-gray-900 font-medium focus:outline-none focus:border-emerald-600 transition-all resize-none font-serif" placeholder="Write your message here..."></textarea>
+                             </div>
+
+                             <div className="pt-4 flex justify-end">
+                                 <button className="px-12 py-4 bg-emerald-950 text-white font-bold rounded-lg hover:bg-emerald-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 flex items-center gap-3">
+                                     Send Message <Send size={18} />
+                                 </button>
+                             </div>
+                         </form>
                      </div>
+
                  </div>
-             </div>
-           </div>
-        </Reveal>
-      </div>
+             </Reveal>
+
+             {/* --- Join Team Promo --- */}
+             <Reveal delay={400} className="mt-12 text-center">
+                 <div className="bg-emerald-50 rounded-2xl p-8 max-w-2xl mx-auto border border-emerald-100">
+                     <p className="text-gray-900 font-bold text-lg mb-2">Interested in building a career with us?</p>
+                     <p className="text-gray-500 mb-6 text-sm">We are always looking for passionate individuals to join our growing family.</p>
+                     <a href="/careers" className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 transition-all shadow-lg hover:shadow-emerald-500/20 group">
+                         Join the Divine Team <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                     </a>
+                 </div>
+             </Reveal>
+        </div>
     </div>
   );
 }

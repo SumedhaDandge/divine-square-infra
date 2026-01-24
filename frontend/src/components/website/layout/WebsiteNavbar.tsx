@@ -58,18 +58,18 @@ export const WebsiteNavbar = () => {
                )}>
                   DS
                </div>
-               <div className="flex flex-col">
+               <div className="flex flex-col justify-center">
                   <span className={cn(
-                      "font-bold text-xl leading-none tracking-tight transition-colors", 
+                      "font-bold text-xl leading-none tracking-tight transition-colors whitespace-nowrap", 
                       isScrolledOrNotTransparent ? "text-gray-900" : "text-white"
                   )}>
-                    Divine Square
+                    Divine Square Infra
                   </span>
                   <span className={cn(
-                      "text-[10px] tracking-[0.2em] uppercase font-semibold mt-1 transition-colors", 
-                      isScrolledOrNotTransparent ? "text-primary" : "text-white/80"
+                      "text-[10px] tracking-widest uppercase font-semibold mt-0.5 transition-colors text-left", 
+                      isScrolledOrNotTransparent ? "text-emerald-600" : "text-emerald-300"
                   )}>
-                    Infra
+                    Channel Partner of Mauli
                   </span>
                </div>
             </Link>
@@ -100,7 +100,7 @@ export const WebsiteNavbar = () => {
 
               <div className="flex items-center gap-4">
                   <button 
-                      onClick={() => navigate('/contact')}
+                      onClick={() => navigate('/book-visit')}
                       className={cn(
                           "hidden lg:flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-md",
                           isScrolledOrNotTransparent 
@@ -154,7 +154,7 @@ export const WebsiteNavbar = () => {
           
           <div className="mt-8">
               <button 
-                  onClick={() => { navigate('/contact'); setIsOpen(false); }}
+                  onClick={() => { navigate('/book-visit'); setIsOpen(false); }}
                   className="w-full bg-primary text-white p-4 rounded-xl font-bold flex items-center justify-center gap-2"
               >
                   <Calendar size={20} /> Book Visit

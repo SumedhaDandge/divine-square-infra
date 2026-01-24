@@ -1,6 +1,6 @@
 
 import { useEffect, useState, useRef } from "react";
-import { ArrowRight, CheckCircle2, MapPin, Calendar, Star, Building2, Phone, TrendingUp, ShieldCheck, PieChart, ArrowUpRight, Quote } from "lucide-react";
+import { ArrowRight, CheckCircle2, MapPin, Calendar, Star, Building2, Phone, TrendingUp, ShieldCheck, PieChart, ArrowUpRight, Quote, BookOpenCheck } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useProjects } from "@/hooks/useProjects";
 import { useDataContext } from "@/contex/DataContext";
@@ -94,277 +94,355 @@ export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen bg-white text-foreground selection:bg-primary/10 selection:text-primary">
       
-      {/* CLEAN HERO SECTION */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      {/* HERO SECTION - Immersive Cinematic Layout */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-32">
+        {/* Background Layer */}
         <div className="absolute inset-0 z-0">
-            <div className="absolute inset-0 bg-black/40 z-10" />
-            {/* Subtle Zoom Effect only */}
-            <img src="/hero-image.png" alt="Hero" className="w-full h-full object-cover animate-pulse-soft" />
+             <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/80 z-10" />
+             <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay z-10" /> {/* Texture */}
+             <img 
+                src="/hero-new.jpg" 
+                alt="Hero Property" 
+                className="w-full h-full object-cover scale-105 animate-slow-zoom" 
+             />
         </div>
-        
-        <div className="container relative z-20 px-4 text-center mt-10">
-            <Reveal className="space-y-8 max-w-4xl mx-auto">
-                <div className="inline-flex flex-col items-center gap-2 mb-4">
-                     <span className="bg-white/10 backdrop-blur-md px-4 py-1 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-white border border-white/20">
-                        Authorized Channel Partner
-                     </span>
-                     <span className="text-xl md:text-2xl font-bold text-white tracking-wide">
-                        MAULI INFRA
-                     </span>
+
+        <div className="container relative z-20 px-4 text-center">
+            <Reveal className="max-w-5xl mx-auto space-y-10">
+                {/* Modern Badge */}
+                <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mx-auto transform hover:scale-105 transition-transform duration-300 cursor-default">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-white/90">
+                        Authorized Partner: Mauli Infra
+                    </span>
                 </div>
                 
-                <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight tracking-tight">
-                    Building Legacy, <br/>
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-100">One Plot at a Time.</span>
+                {/* Grand Title */}
+                <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold text-white leading-[1.1] tracking-tight drop-shadow-2xl">
+                    Experience the <br/>
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-emerald-400 to-emerald-200">
+                        Art of Living.
+                    </span>
                 </h1>
                 
-                <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto leading-relaxed font-light">
-                    Secure your future with Nagpur’s most trusted real estate developer. Legal clarity, prime locations, and unmatched growth.
+                {/* Refined Subtitle */}
+                <p className="text-lg md:text-2xl text-white/80 max-w-2xl mx-auto leading-relaxed font-light drop-shadow-md">
+                   Discover NMRDA sanctioned premium plots in Nagpur's most promising locations. 
+                   <span className="block mt-2 font-medium text-white">Legal Purity. Strategic Growth. Timeless Value.</span>
                 </p>
 
-                <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
-                     <button onClick={() => navigate('/projects-public')} className="px-8 py-4 bg-white text-primary font-bold text-lg rounded-xl shadow-lg hover:bg-gray-50 transition-all flex items-center justify-center gap-2">
-                        View Projects <ArrowRight size={20} />
+                {/* Dual Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-5 justify-center pt-8 items-center">
+                     <button 
+                        onClick={() => navigate('/projects-public')} 
+                        className="w-full sm:w-auto px-8 py-4 bg-emerald-600 text-white font-bold text-lg rounded-full shadow-[0_0_40px_-10px_rgba(16,185,129,0.5)] hover:bg-emerald-500 hover:shadow-[0_0_60px_-15px_rgba(16,185,129,0.7)] transition-all flex items-center justify-center gap-3 group"
+                     >
+                        Explore Collection <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                      </button>
-                     <button onClick={() => navigate('/contact')} className="px-8 py-4 bg-transparent border border-white text-white font-bold text-lg rounded-xl hover:bg-white/10 transition-all">
-                        Contact Us
+                     <button 
+                         onClick={() => navigate('/contact')} 
+                         className="w-full sm:w-auto px-8 py-4 bg-white/10 text-white font-bold text-lg rounded-full backdrop-blur-md border border-white/20 hover:bg-white hover:text-emerald-900 transition-all flex items-center justify-center"
+                     >
+                        Schedule Site Visit
                      </button>
                 </div>
             </Reveal>
         </div>
         
-        {/* Simple scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 animate-bounce">
-            <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
-                <div className="w-1 h-2 bg-white/50 rounded-full" />
+        {/* Bottom Trust Strip (New Element to replace mouse icon) */}
+        <div className="absolute bottom-0 w-full z-20 border-t border-white/10 bg-black/20 backdrop-blur-sm hidden md:block">
+            <div className="container px-4 py-6">
+                 <div className="flex justify-center gap-12 text-white/60">
+                     {['100% Clear Titles', 'NMRDA Sanctioned', 'Bank Finance Available', 'Prime Locations'].map((item, i) => (
+                         <div key={i} className="flex items-center gap-2 text-sm font-medium uppercase tracking-wider">
+                             <ShieldCheck size={16} className="text-emerald-500" /> {item}
+                         </div>
+                     ))}
+                 </div>
             </div>
         </div>
       </section>
 
-      {/* STATS - Clean & Minimal */}
-      <section className="py-20 bg-white border-b border-gray-100">
+      {/* STATS - Modern Floating Strip */}
+      <section className="relative z-30 -mt-20 pb-20 pointer-events-none">
           <div className="container px-4">
               <Reveal>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-gray-100">
+                  <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 md:p-12 pointer-events-auto">
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:divide-x divide-gray-100">
+                          {[
+                            { label: "Happy Families", val: 500, suffix: "+" },
+                            { label: "Years Experience", val: 12, suffix: "+" },
+                            { label: "Projects Completed", val: 25, suffix: "+" },
+                            { label: "Appreciation", val: 150, suffix: "%" }
+                          ].map((stat, i) => (
+                              <div key={i} className="text-center px-4 group">
+                                  <p className="text-4xl md:text-5xl font-bold text-gray-900 mb-2 group-hover:scale-110 transition-transform duration-300">
+                                      <AnimatedCounter end={stat.val} suffix={stat.suffix} />
+                                  </p>
+                                  <p className="text-xs md:text-sm text-gray-500 uppercase tracking-widest font-semibold">{stat.label}</p>
+                              </div>
+                          ))}
+                      </div>
+                  </div>
+              </Reveal>
+          </div>
+      </section>
+
+      {/* WHY CHOOSE US - Creative & Dark */}
+      <section className="py-32 bg-emerald-950 relative overflow-hidden">
+          {/* Background Decorative Elements */}
+          <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay" />
+          {/* Creative Gradient Orbs */}
+          <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-emerald-900/40 rounded-full mix-blend-screen filter blur-[100px] animate-pulse-slow" />
+          <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-emerald-800/20 rounded-full mix-blend-screen filter blur-[100px] animate-pulse-slow animation-delay-2000" />
+
+          <div className="container px-4 relative z-10">
+              <Reveal className="text-center max-w-3xl mx-auto mb-20">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-md mb-6">
+                      <Star size={12} className="text-emerald-400 fill-emerald-400" />
+                      <span className="text-emerald-300 font-bold uppercase tracking-widest text-xs">The Divine Advantage</span>
+                  </div>
+                  <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                      Why Smart Investors <br/>
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 to-teal-400">Choose Confidence.</span>
+                  </h2>
+              </Reveal>
+
+              {/* Creative Connected Grid */}
+              <div className="relative grid md:grid-cols-3 gap-8 lg:gap-12">
+                   {/* Connecting Line (Desktop) */}
+                   <div className="absolute top-16 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent hidden md:block" />
+
+                   {[
+                       { number: "01", icon: TrendingUp, title: "High Appreciation", desc: "Strategic locations near MIHAN and Metro corridors ensure 15-20% annual ROI." },
+                       { number: "02", icon: ShieldCheck, title: "100% Legal Safety", desc: "Zero tolerance for ambiguity. All projects are RERA registered & NMRDA sanctioned.", highlighted: true },
+                       { number: "03", icon: BookOpenCheck, title: "Transparent Dealing", desc: "What you see is what you pay. No hidden costs, just pure peace of mind." }
+                   ].map((feature, i) => (
+                       <Reveal key={i} delay={i * 150} className={cn(
+                           "relative group",
+                           feature.highlighted ? "md:translate-y-12" : "" // Stagger effect
+                       )}>
+                           {/* Card Container */}
+                           <div className="relative bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-3xl overflow-hidden hover:bg-white/10 transition-all duration-500 hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)] hover:-translate-y-2">
+                               
+                               {/* Large Creative Number Background */}
+                               <span className="absolute -right-4 -top-4 text-[8rem] font-black text-white/5 group-hover:text-white/10 transition-colors select-none leading-none z-0">
+                                   {feature.number}
+                               </span>
+
+                               {/* Icon Area */}
+                               <div className="relative z-10 w-20 h-20 mx-auto mb-8 relative">
+                                    <div className="absolute inset-0 bg-emerald-500/20 rounded-2xl rotate-45 group-hover:rotate-90 transition-transform duration-500" />
+                                    <div className="absolute inset-0 bg-emerald-500/20 rounded-2xl -rotate-12 group-hover:rotate-0 transition-transform duration-500" />
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <feature.icon size={32} className="text-emerald-300 drop-shadow-[0_0_10px_rgba(110,231,183,0.5)]" />
+                                    </div>
+                               </div>
+
+                               {/* Content */}
+                               <div className="relative z-10 text-center">
+                                   <h3 className="text-xl font-bold text-white mb-3 group-hover:text-emerald-300 transition-colors">{feature.title}</h3>
+                                   <p className="text-emerald-100/70 leading-relaxed text-sm font-light">
+                                       {feature.desc}
+                                   </p>
+                               </div>
+
+                               {/* Bottom Active Line */}
+                               <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+                           </div>
+                       </Reveal>
+                   ))}
+              </div>
+          </div>
+      </section>
+
+      {/* OUR STORY - Sophisticated Split */}
+      <section className="py-24 bg-white overflow-hidden">
+          <div className="container px-4">
+              <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+                  <Reveal>
+                      <div className="relative">
+                           {/* Clean Image with Decoration */}
+                          <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
+                              <img src="/hero-image.png" alt="About Divine Square" className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700" />
+                          </div>
+                          
+                          {/* Decorative Elements */}
+                          <div className="absolute -top-10 -left-10 w-40 h-40 bg-emerald-50 rounded-full mix-blend-multiply filter blur-2xl opacity-70" />
+                          <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-amber-50 rounded-full mix-blend-multiply filter blur-2xl opacity-70" />
+                          
+                          {/* Quote Card */}
+                          <div className="absolute bottom-8 left-8 right-8 bg-white/95 backdrop-blur-md p-6 rounded-xl border border-gray-100 shadow-lg z-20">
+                              <p className="text-gray-900 font-serif italic text-lg mb-2">"We build the canvas for your family's future."</p>
+                              <p className="text-sm font-bold text-emerald-600 uppercase tracking-wider">— Director's Vision</p>
+                          </div>
+                      </div>
+                  </Reveal>
+                  
+                  <Reveal delay={200}>
+                      <div className="space-y-6">
+                           <div className="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-widest rounded-full">
+                               Since 2012
+                           </div>
+                           <h2 className="text-3xl md:text-5xl font-bold text-gray-900 leading-tight">
+                               Building Trust, <br/><span className="text-emerald-600">Delivering Dreams.</span>
+                           </h2>
+                           <div className="w-20 h-1.5 bg-amber-400 rounded-full" />
+                           
+                           <div className="space-y-4 text-lg text-gray-600 font-light leading-relaxed">
+                               <p>
+                                   At Divine Square Infra, we realized that buying a plot is often filled with uncertainty. We set out to change that by establishing a brand rooted in <strong>transparency, legality, and commitment</strong>.
+                               </p>
+                               <p>
+                                   With over a decade of experience in Nagpur's real estate market, we have successfully handed over happiness to 500+ families. Our projects are communities designed for holistic living.
+                               </p>
+                           </div>
+
+                           <div className="pt-4 flex items-center gap-6">
+                               <Link to="/about" className="px-8 py-3 bg-gray-900 text-white font-bold rounded-lg hover:bg-emerald-600 transition-colors shadow-lg">
+                                   Read Our Story
+                               </Link>
+                               <Link to="/projects-public" className="font-bold text-gray-900 hover:text-emerald-600 transition-colors underline decoration-2 decoration-amber-400 underline-offset-4">
+                                   View Projects
+                               </Link>
+                           </div>
+                      </div>
+                  </Reveal>
+              </div>
+          </div>
+      </section>
+
+      {/* JOURNEY MAP - Vertical Zig-Zag Timeline */}
+      <section className="py-32 bg-white relative overflow-hidden">
+          <div className="container px-4 relative z-10 max-w-5xl mx-auto">
+              <Reveal className="text-center mb-24">
+                  <div className="inline-block px-4 py-1.5 rounded-full border border-gray-200 bg-gray-50 text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">
+                      Process
+                  </div>
+                  <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Your Path to Ownership</h2>
+                  <p className="text-gray-500 max-w-2xl mx-auto text-lg font-light">
+                      We plan everything so you don't have to. A seamless 4-step journey to your dream plot.
+                  </p>
+              </Reveal>
+
+              <div className="relative">
+                  {/* Central Timeline Line */}
+                  <div className="absolute top-0 bottom-0 left-1/2 w-px bg-gray-200 -translate-x-1/2 hidden md:block" />
+                  
+                  <div className="space-y-12 md:space-y-24">
                       {[
-                        { label: "Happy Families", val: 500, suffix: "+" },
-                        { label: "Years Experience", val: 10, suffix: "+" },
-                        { label: "Completed Projects", val: 15, suffix: "+" },
-                        { label: "Appreciation", val: 100, suffix: "%" }
-                      ].map((stat, i) => (
-                          <div key={i} className="text-center px-4">
-                              <p className="text-4xl md:text-5xl font-bold text-primary mb-2">
-                                  <AnimatedCounter end={stat.val} suffix={stat.suffix} />
-                              </p>
-                              <p className="text-sm text-gray-500 uppercase tracking-widest font-medium">{stat.label}</p>
+                          { step: "01", icon: Phone, title: "Connect & Consult", desc: "Schedule a free site visit. Our experts pick you up, show you around, and answer every question." },
+                          { step: "02", icon: MapPin, title: "Select Your Spot", desc: "Choose the perfect plot based on Vastu, budget, and future growth potential." },
+                          { step: "03", icon: ShieldCheck, title: "Legal Verification", desc: "We provide complete documentation for you to verify with your legal advisor. 100% Transparency." },
+                          { step: "04", icon: CheckCircle2, title: "Registration & Joy", desc: "Sign the sale deed, complete the registry, and celebrate. Welcome to the family!" }
+                      ].map((item, i) => (
+                          <div key={i} className={cn(
+                              "flex flex-col md:flex-row items-center gap-8 md:gap-16 relative",
+                              i % 2 === 0 ? "" : "md:flex-row-reverse"
+                          )}>
+                              {/* Central Dot */}
+                              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white border-4 border-emerald-500 rounded-full z-20 hidden md:block shadow-[0_0_0_8px_rgba(255,255,255,1)]" />
+
+                              {/* Content Side */}
+                              <div className={cn("flex-1 text-center md:text-left", i % 2 === 0 ? "md:text-right" : "md:text-left")}>
+                                  <Reveal delay={i * 100} className="space-y-4">
+                                      <div className={cn(
+                                          "inline-flex w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 items-center justify-center mb-2 shadow-sm",
+                                          i % 2 === 0 ? "md:ml-auto" : "md:mr-auto"
+                                      )}>
+                                          <item.icon size={32} />
+                                      </div>
+                                      <h3 className="text-2xl font-bold text-gray-900 leading-tight">
+                                          <span className="text-emerald-500/50 text-sm font-black uppercase tracking-widest block mb-1">Step {item.step}</span>
+                                          {item.title}
+                                      </h3>
+                                  </Reveal>
+                              </div>
+
+                              {/* Description Side (Visual) */}
+                              <div className="flex-1">
+                                  <Reveal delay={i * 100 + 100}>
+                                      <div className={cn(
+                                          "bg-gray-50 rounded-3xl p-8 border border-gray-100 hover:border-emerald-100 transition-colors relative group",
+                                          i % 2 === 0 ? "md:rounded-tr-[4rem]" : "md:rounded-tl-[4rem]"
+                                      )}>
+                                          <p className="text-gray-600 leading-relaxed text-lg">
+                                              {item.desc}
+                                          </p>
+                                          <div className="absolute top-4 right-4 text-6xl font-black text-gray-100 -z-10 group-hover:text-emerald-50 transition-colors">
+                                              {item.step}
+                                          </div>
+                                      </div>
+                                  </Reveal>
+                              </div>
                           </div>
                       ))}
                   </div>
-              </Reveal>
-          </div>
-      </section>
-
-      {/* MARKET INSIGHTS - Professional Cards */}
-      <section className="py-24 bg-gray-50">
-          <div className="container px-4">
-              <Reveal className="mb-16 text-center max-w-2xl mx-auto">
-                  <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">Why Invest With Us?</h2>
-                  <p className="text-lg text-gray-600">We offer more than just land; we offer a secure foundation for your wealth and future generations.</p>
-              </Reveal>
-
-              <div className="grid lg:grid-cols-3 gap-8">
-                  {/* Card 1 */}
-                  <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100">
-                      <div className="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center mb-6">
-                          <TrendingUp className="text-emerald-600 w-7 h-7" />
-                      </div>
-                      <h3 className="text-2xl font-bold mb-3 text-gray-900">High Appreciation</h3>
-                      <p className="text-gray-600 mb-6 leading-relaxed">
-                          Land in Nagpur's developing corridors has shown consistent double-digit growth year over year, outperforming traditional assets.
-                      </p>
-                      <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-                          <div className="h-full bg-emerald-500 w-[85%] rounded-full" />
-                      </div>
-                      <p className="text-right text-xs font-bold text-emerald-600 mt-2">+85% Growth (5Y)</p>
-                  </div>
-
-                  {/* Card 2 */}
-                  <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100">
-                      <div className="w-14 h-14 bg-amber-50 rounded-xl flex items-center justify-center mb-6">
-                          <ShieldCheck className="text-amber-600 w-7 h-7" />
-                      </div>
-                      <h3 className="text-2xl font-bold mb-3 text-gray-900">100% Legal Safety</h3>
-                      <p className="text-gray-600 mb-6 leading-relaxed">
-                          Every project is NMRDA sanctioned and RERA registered. We prioritize clear titles above all else.
-                      </p>
-                      <ul className="space-y-2">
-                          {['RERA Registered', 'NMRDA Sanctioned', 'Clear Title'].map((item, i) => (
-                              <li key={i} className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                                  <CheckCircle2 size={16} className="text-amber-500" /> {item}
-                              </li>
-                          ))}
-                      </ul>
-                  </div>
-                  
-                  {/* Card 3 */}
-                  <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100">
-                      <div className="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-6">
-                          <MapPin className="text-blue-600 w-7 h-7" />
-                      </div>
-                      <h3 className="text-2xl font-bold mb-3 text-gray-900">Strategic Locations</h3>
-                      <p className="text-gray-600 mb-6 leading-relaxed">
-                          Proximity to MIHAN, Samruddhi Mahamarg, and Metro stations ensures your connectivity is future-proof.
-                      </p>
-                      <div className="flex gap-4">
-                          <div className="flex-1 bg-gray-50 p-3 rounded-lg text-center">
-                              <span className="block text-xl font-bold text-gray-900">5km</span>
-                              <span className="text-xs text-gray-500 uppercase">Airport</span>
-                          </div>
-                          <div className="flex-1 bg-gray-50 p-3 rounded-lg text-center">
-                              <span className="block text-xl font-bold text-gray-900">2km</span>
-                              <span className="text-xs text-gray-500 uppercase">Metro</span>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </section>
-
-      {/* NEW: ABOUT SNIPPET */}
-      <section className="py-24 bg-white overflow-hidden">
-          <div className="container px-4">
-              <div className="grid lg:grid-cols-2 gap-16 items-center">
-                  <Reveal>
-                      <div className="relative">
-                          <div className="aspect-square bg-gray-100 rounded-[2rem] overflow-hidden">
-                              <img src="/hero-image.png" alt="About Divine Square" className="w-full h-full object-cover" />
-                          </div>
-                          <div className="absolute -bottom-10 -right-10 w-2/3 h-2/3 bg-primary rounded-[2rem] p-8 text-white hidden md:flex flex-col justify-center shadow-2xl">
-                              <Quote className="w-10 h-10 text-white/20 mb-4" />
-                              <p className="text-lg font-light italic leading-relaxed mb-4">
-                                  "We don't just sell plots; we build the canvas for your family's future memories."
-                              </p>
-                              <p className="font-bold text-white">— Director's Vision</p>
-                          </div>
-                      </div>
-                  </Reveal>
-                  <Reveal delay={200}>
-                      <span className="text-primary font-bold tracking-widest uppercase text-sm">Our Story</span>
-                      <h2 className="text-4xl font-bold text-gray-900 mt-2 mb-6">Building Trust Since 2012</h2>
-                      <div className="space-y-4 text-lg text-gray-600 leading-relaxed">
-                          <p>
-                              At Divine Square Infra, we realized that buying a plot is often filled with uncertainty. We set out to change that by establishing a brand rooted in <strong>transparency, legality, and commitment</strong>.
-                          </p>
-                          <p>
-                              With over a decade of experience in Nagpur's real estate market, we have successfully handed over happiness to 500+ families. Our projects are not just plots of land but well-planned communities with top-notch amenities.
-                          </p>
-                      </div>
-                      <div className="pt-8">
-                          <Link to="/about" className="inline-flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all">
-                              Read Our Full Story <ArrowRight size={20} />
-                          </Link>
-                      </div>
-                  </Reveal>
-              </div>
-          </div>
-      </section>
-
-      {/* NEW: PROCESS STEPS */}
-      <section className="py-24 bg-primary text-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-          <div className="container px-4 relative z-10">
-              <Reveal className="text-center mb-16">
-                  <h2 className="text-3xl md:text-5xl font-bold mb-4">Your Journey to Ownership</h2>
-                  <p className="text-white/80 max-w-2xl mx-auto text-lg">We've simplified the buying process to make it hassle-free for you.</p>
-              </Reveal>
-
-              <div className="grid md:grid-cols-4 gap-8">
-                  {[
-                      { step: "01", title: "Site Visit", desc: "Schedule a free pick-up & drop to visit our premium locations." },
-                      { step: "02", title: "Selection", desc: "Choose the perfect plot that fits your budget and vastu needs." },
-                      { step: "03", title: "Legal Check", desc: "Verify all documents with your legal advisor for 100% peace of mind." },
-                      { step: "04", title: "Registration", desc: "Complete the sale deed and become a proud owner." }
-                  ].map((item, i) => (
-                      <Reveal key={i} delay={i * 100} className="relative group">
-                          <div className="text-6xl font-black text-white/10 mb-[-20px] ml-4 relative z-0 group-hover:text-white/20 transition-colors">
-                              {item.step}
-                          </div>
-                          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/10 relative z-10 hover:bg-white/20 transition-all h-full">
-                              <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                              <p className="text-white/70 text-sm leading-relaxed">{item.desc}</p>
-                          </div>
-                      </Reveal>
-                  ))}
               </div>
           </div>
       </section>
       
-      {/* FEATURED PROJECTS - Redesigned Modern */}
-      <section className="py-24 bg-white relative overflow-hidden">
-          {/* Subtle decoration */}
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gray-50 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
-          
-          <div className="container px-4 relative z-10">
-               <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-                   <div className="max-w-2xl">
-                       <span className="text-primary font-bold tracking-widest uppercase text-sm flex items-center gap-2 mb-3">
-                           <span className="w-8 h-[2px] bg-primary"></span>
+      {/* FEATURED PROJECTS - Modern Framed (Consistent Theme) */}
+      <section className="py-24 bg-white relative">
+          <div className="container px-4">
+               <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                   <div>
+                       <span className="text-primary font-bold tracking-widest uppercase text-xs mb-2 block">
                            Our Portfolio
                        </span>
-                       <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">Signature Developments</h2>
+                       <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Featured Developments</h2>
                    </div>
-                   <Link to="/projects-public" className="group flex items-center gap-2 px-6 py-3 bg-gray-50 rounded-full font-semibold text-gray-900 hover:bg-primary hover:text-white transition-all duration-300">
-                       Explore All Projects <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                   <Link to="/projects-public" className="group hidden md:inline-flex items-center gap-2 text-sm font-bold text-gray-900 hover:text-primary transition-colors border-b border-gray-200 hover:border-primary pb-1">
+                       View All Projects <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                    </Link>
                </div>
 
                {isLoading ? (
                   <div className="flex justify-center py-20"><div className="w-12 h-12 border-4 border-gray-200 border-t-primary rounded-full animate-spin"/></div>
               ) : (
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-                      {featuredProjects.map((project: any, index: number) => (
-                          <Reveal key={project._id} delay={index * 150} className="group h-full">
-                             <Link to={`/projects-public/${project._id}`} className="block h-full relative">
-                                <div className="h-full bg-white rounded-[2rem] overflow-hidden border border-gray-100 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:-translate-y-2 flex flex-col">
-                                    {/* Image Container with Overlay */}
-                                    <div className="relative aspect-[4/3] overflow-hidden m-3 rounded-[1.5rem]">
-                                        <img src="/hero-image.png" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={project.projectName} />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-40" />
+                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                      {(projects?.filter((p: any) => p.status === "active").slice(0, 4) || []).map((project: any, index: number) => (
+                          <Reveal key={project._id} delay={index * 100} className="h-full">
+                             <Link to={`/projects-public/${project._id}`} className="block h-full group">
+                                <div className="bg-white rounded-2xl border border-gray-100 p-3 hover:border-primary/30 hover:shadow-lg transition-all duration-300 h-full flex flex-col">
+                                    {/* Framed Image Container */}
+                                    <div className="aspect-[4/3] rounded-xl overflow-hidden relative bg-gray-100">
+                                        <img 
+                                            src="/hero-image.png" 
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                                            alt={project.projectName} 
+                                        />
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
                                         
-                                        <div className="absolute top-4 left-4">
+                                        {/* Simple Tag */}
+                                        <div className="absolute top-3 left-3">
                                             <span className={cn(
-                                                "px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider backdrop-blur-md shadow-lg border border-white/10",
-                                                project.status === 'active' ? "bg-emerald-500/90 text-white" :
-                                                project.status === 'completed' ? "bg-blue-500/90 text-white" : "bg-amber-500/90 text-white"
+                                                "px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider backdrop-blur-md shadow-sm border border-white/20 text-white",
+                                                project.status === 'active' ? "bg-emerald-500/90" :
+                                                project.status === 'completed' ? "bg-blue-500/90" : "bg-amber-500/90"
                                             )}>
-                                                {project.status}
-                                            </span>
-                                        </div>
-
-                                        <div className="absolute bottom-4 left-4 right-4 text-white opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                                            <span className="inline-flex items-center gap-2 text-sm font-medium bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10">
-                                                View Details <ArrowUpRight size={14} />
+                                                {project.status === 'active' ? 'Active' : project.status}
                                             </span>
                                         </div>
                                     </div>
                                     
-                                    {/* Content */}
-                                    <div className="p-6 pt-2 flex flex-col flex-grow">
-                                        <div className="flex justify-between items-start mb-2">
-                                            <h3 className="text-2xl font-bold text-gray-900 group-hover:text-primary transition-colors">{project.projectName}</h3>
-                                        </div>
-                                        <p className="flex items-center gap-2 text-sm text-gray-500 mb-6 font-medium">
-                                            <MapPin size={16} className="text-primary/70" /> {project.location}
+                                    {/* Clean Content */}
+                                    <div className="pt-4 px-1 flex flex-col flex-grow">
+                                        <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-primary transition-colors truncate">{project.projectName}</h3>
+                                        <p className="flex items-center gap-1.5 text-xs text-gray-500 mb-4 font-medium">
+                                            <MapPin size={12} /> {project.location}
                                         </p>
                                         
-                                        <div className="mt-auto grid grid-cols-2 gap-4 pt-4 border-t border-dashed border-gray-200">
+                                        {/* Info Box */}
+                                        <div className="mt-auto bg-gray-50 rounded-lg p-3 flex justify-between items-center border border-gray-100 group-hover:bg-primary/5 group-hover:border-primary/10 transition-colors">
                                             <div>
-                                                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Starting From</p>
-                                                <p className="text-lg font-bold text-primary">₹{project.priceRange?.min ? (project.priceRange.min / 100000).toFixed(1) + " L" : "On Request"}</p>
+                                                 <p className="text-[10px] text-gray-400 uppercase font-bold">Starts From</p>
+                                                 <p className="text-sm font-bold text-gray-900">
+                                                     ₹{project.priceRange?.min ? (project.priceRange.min / 100000).toFixed(1) + " L" : "On Request"}
+                                                 </p>
                                             </div>
-                                            <div className="text-right">
-                                                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Total Units</p>
-                                                <p className="text-lg font-bold text-gray-900">{project.totalUnits}</p>
+                                            <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-400 group-hover:text-primary group-hover:border-primary transition-colors">
+                                                <ArrowUpRight size={14} />
                                             </div>
                                         </div>
                                     </div>
@@ -374,6 +452,10 @@ export default function HomePage() {
                       ))}
                   </div>
               )}
+              
+              <div className="mt-8 text-center md:hidden">
+                   <Link to="/projects-public" className="btn-secondary">View All Projects</Link>
+              </div>
           </div>
       </section>
 
@@ -402,7 +484,7 @@ export default function HomePage() {
                           <Reveal key={i} delay={i * 100}>
                               <div 
                                 className={cn(
-                                    "bg-white rounded-2xl border transition-all duration-300 overflow-hidden",
+                                    "bg-white rounded-2xl border transition-all duration-300 overflow-hidden w-full",
                                     openFaqIndex === i ? "border-primary shadow-md" : "border-gray-200 hover:border-gray-300"
                                 )}
                               >

@@ -12,7 +12,7 @@ const projectSchema = new mongoose.Schema(
 
     projectType: {
       type: String,
-      enum: ["commercial", "residential", "mixed-use"],
+      enum: ["commercial", "residential", "both"],
       required: true
     },
 

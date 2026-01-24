@@ -9,7 +9,7 @@ export const WebsiteFooter = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-16">
           {/* Brand Info */}
-          <div className="lg:col-span-4 space-y-6">
+          <div className="lg:col-span-6 space-y-6">
             <Link to="/" className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-xl shadow-lg shadow-primary/20">
                     DS
@@ -23,8 +23,12 @@ export const WebsiteFooter = () => {
               Nagpur's most trusted real estate partner. We specialize in legally clear, NMRDA sanctioned, and RERA registered plots designed for your future legacy.
             </p>
             <div className="flex gap-4 pt-2">
-              {[Facebook, Instagram, Linkedin].map((Icon, i) => (
-                <a key={i} href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all duration-300 border border-gray-700 shadow-sm hover:shadow-lg group">
+              {[
+                  { Icon: Facebook, link: "#" },
+                  { Icon: Instagram, link: "https://www.instagram.com/divinesquareinfra/" },
+                  { Icon: Linkedin, link: "#" }
+              ].map(({ Icon, link }, i) => (
+                <a key={i} href={link} className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all duration-300 border border-gray-700 shadow-sm hover:shadow-lg group">
                   <Icon size={18} className="text-gray-400 group-hover:text-white transition-colors" />
                 </a>
               ))}
@@ -38,28 +42,41 @@ export const WebsiteFooter = () => {
              </a>
           </div>
 
-          {/* Quick Links */}
-          <div className="lg:col-span-3">
-            <h4 className="font-bold text-lg mb-6 text-white capitalize tracking-wide">Company</h4>
-            <ul className="space-y-4">
-              {['Home', 'About Us', 'Projects', 'Contact'].map((item) => (
-                 <li key={item}>
-                    <Link to={item === 'Home' ? '/' : item === 'Projects' ? '/projects-public' : `/${item.toLowerCase().replace(' ', '-')}`} className="text-gray-400 hover:text-primary hover:pl-2 transition-all inline-block text-sm font-medium">
-                        {item}
-                    </Link>
-                 </li>
-              ))}
-            </ul>
+          {/* Quick Links - Centered */}
+          <div className="lg:col-span-2 lg:flex lg:justify-center">
+            <div>
+                <h4 className="font-bold text-lg mb-6 text-white capitalize tracking-wide">Company</h4>
+                <ul className="space-y-4">
+                  {[
+                      { name: 'Home', path: '/' },
+                      { name: 'About Us', path: '/about' },
+                      { name: 'Projects', path: '/projects-public' },
+                      { name: 'Contact', path: '/contact' }
+                  ].map((item) => (
+                     <li key={item.name}>
+                        <Link to={item.path} className="text-gray-400 hover:text-primary hover:pl-2 transition-all inline-block text-sm font-medium">
+                            {item.name}
+                        </Link>
+                     </li>
+                  ))}
+                </ul>
+            </div>
           </div>
 
-          {/* Projects */}
-          <div className="lg:col-span-5">
-            <h4 className="font-bold text-lg mb-6 text-white capitalize tracking-wide">Featured Projects</h4>
-            <ul className="space-y-4">
-              <li><Link to="/projects-public" className="group flex items-center justify-between border-b border-gray-800 pb-3 hover:border-primary transition-colors"><span className="text-gray-400 font-medium group-hover:text-primary transition-colors">Mauli City</span> <span className="text-[10px] px-2 py-1 rounded-full bg-emerald-900/30 text-emerald-400 font-bold uppercase">Ready</span></Link></li>
-              <li><Link to="/projects-public" className="group flex items-center justify-between border-b border-gray-800 pb-3 hover:border-primary transition-colors"><span className="text-gray-400 font-medium group-hover:text-primary transition-colors">Divine Park</span> <span className="text-[10px] px-2 py-1 rounded-full bg-amber-900/30 text-amber-400 font-bold uppercase">Few Left</span></Link></li>
-              <li><Link to="/projects-public" className="group flex items-center justify-between border-b border-gray-800 pb-3 hover:border-primary transition-colors"><span className="text-gray-400 font-medium group-hover:text-primary transition-colors">Green Valley</span> <span className="text-[10px] px-2 py-1 rounded-full bg-blue-900/30 text-blue-400 font-bold uppercase">New Launch</span></Link></li>
-            </ul>
+          {/* Careers / Team Promo - Right Side Expanded */}
+          <div className="lg:col-span-4">
+              <h4 className="font-bold text-lg mb-6 text-white capitalize tracking-wide">Join Our Vision</h4>
+              <div className="bg-gray-900 p-8 rounded-3xl border border-gray-800 hover:border-gray-700 transition-colors group relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-[40px] pointer-events-none" />
+                  
+                  <h5 className="text-white font-bold text-lg mb-2">Build Your Legacy</h5>
+                  <p className="text-gray-400 text-sm mb-6 leading-relaxed">
+                      We are always looking for visionary people who want to redefine real estate.
+                  </p>
+                  <Link to="/careers" className="w-full inline-flex items-center justify-center gap-2 bg-white/10 text-white hover:bg-white hover:text-gray-900 px-6 py-3 rounded-xl font-bold text-sm transition-all">
+                      View Openings <ArrowRight size={16} />
+                  </Link>
+              </div>
           </div>
         </div>
 

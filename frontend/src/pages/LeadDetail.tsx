@@ -61,17 +61,19 @@ export default function LeadDetail() {
     fetchLeads();
   }, [id]);
 
+  console.log("taskByID",taskByID)
+
   // Combine all activities into timeline
   const timeline =
     taskByID
       ?.map((t: any) => ({
         id: t._id,
         type: t.taskType,
-        title: t.title,
-        description: t.description || "",
-        time: format(new Date(t.dueDate), "MMM d, h:mm a"),
+        title: t.remark,
+        // description: t.description || "",
+        time: format(new Date(t.taskTime), "MMM d, h:mm a"),
         completed: t.status === "completed",
-        sortDate: new Date(t.dueDate),
+        sortDate: new Date(t.taskDate),
       }))
       .sort((a: any, b: any) => b.sortDate.getTime() - a.sortDate.getTime()) ||
     [];
@@ -263,7 +265,7 @@ export default function LeadDetail() {
           </div>
         )} */}
 
-        {/* Activity Timeline */}
+  
         {/* Activity Timeline */}
         <div className="crm-card">
           <div className="flex items-center justify-between mb-4">
@@ -289,7 +291,7 @@ export default function LeadDetail() {
           ) : (
             <div className="space-y-4">
               {timeline.map((item: any, index: number) => (
-                <div key={item.id} className="flex gap-3">b       
+                <div key={item.id} className="flex gap-3">   
                   {/* Timeline line */}
                   <div className="flex flex-col items-center">
                     <div

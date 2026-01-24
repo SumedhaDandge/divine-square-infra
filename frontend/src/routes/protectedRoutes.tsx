@@ -22,7 +22,7 @@ export const protectedRoutes = [
     element: <AddLead />,
   },
   {
-    path: "/leads/:leadId",
+    path: "/leads/view",
     element: <LeadDetail />,
   },
   {

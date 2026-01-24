@@ -72,8 +72,9 @@ class DivineSquareApi {
   }
 
   createLeadTask(data: any): Promise<any> {
-    return api._get(`${this._urlMapping.LEAD_TASKS}`);
+    return api._post(`${this._urlMapping.LEAD_TASKS}`,data);
   }
+  // completeLeadTask()
 }
 
 const divineSquareApi = new DivineSquareApi();

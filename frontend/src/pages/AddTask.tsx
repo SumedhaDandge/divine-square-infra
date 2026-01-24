@@ -511,6 +511,9 @@ export default function AddTask() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const leadIdParam = searchParams.get("leadId");
+const userId = JSON.parse(sessionStorage.getItem("auth_user"));
+console.log("userID", userId?.id); // or user.id depending on your structure
+
 
   const { fetchLeads } = useLeads();
   const { leads } = useDataContext();
@@ -547,19 +550,24 @@ export default function AddTask() {
       return;
     }
 
+    console.log("paylod",formData)
+
+    const paylod = {
+      lead : formData.lead_id,
+      taskType :  formData.type,
+      remark : formData.remark,
+      taskDate : formData.due_date,
+      taskTime : formData.due_time,
+      assignedTo : userId.id
+    }
+
     try {
       setLoading(true);
 
-      const response = await divineSquareService.createLeadTask({
-        lead: formData.lead_id,
-        taskType: formData.type,
-        remark: formData.remark,
-        taskDate: format(formData.due_date!, "yyyy-MM-dd"),
-        taskTime: formData.due_time,
-      });
+      const response = await divineSquareService.createLeadTask(paylod);
 
       console.log("helooo", response);
-      if (response.status === 200) {
+      if (response.status === 201) {
         toast.success("Task created successfully");
         navigate(-1);
       }
@@ -677,7 +685,11 @@ export default function AddTask() {
                   onSelect={(date) =>
                     setFormData({ ...formData, due_date: date })
                   }
-                  disabled={(date) => date < new Date()}
+                  disabled={(date) => {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    return date < today;
+                  }}
                 />
               </PopoverContent>
             </Popover>

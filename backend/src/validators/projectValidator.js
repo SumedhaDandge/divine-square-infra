@@ -16,7 +16,7 @@ export const createProjectValidator = [
     .withMessage("Location is required"),
 
   body("projectType")
-    .isIn(["commercial", "residential", "mixed_use"])
+    .isIn(["commercial", "residential", "both"])
     .withMessage("Invalid project type"),
 
   body("totalUnits")
