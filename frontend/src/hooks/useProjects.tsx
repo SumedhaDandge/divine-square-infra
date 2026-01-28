@@ -36,4 +36,14 @@ export const useProjects = () => {
   return { isLoading ,fetchProjects, createProject };
 };
 
-export default { useProjects };
+export const useProjectPlots = (projectId: string) => {
+    // Placeholder until backend is ready
+    return { data: [], isLoading: false };
+};
+
+export const useLayouts = (projectId: string) => {
+    // Placeholder until backend is ready
+    return { data: [], isLoading: false };
+};
+
+export default useProjects;
