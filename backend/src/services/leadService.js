@@ -120,3 +120,57 @@ export const updateLeadService = async (leadId, payload, userId) => {
     data: lead
   };
 };
+
+export const bulkCreateLeadsService = async (leadsData, userId) => {
+  const results = {
+      success: 0,
+      failed: 0,
+      errors: [] 
+  };
+  
+  // We process one by one to report errors per row
+  for (const [index, leadData] of leadsData.entries()) {
+      try {
+          // Default fields if missing
+          if(!leadData.lookingFor) leadData.lookingFor = "Residential";
+          if(!leadData.propertyType) leadData.propertyType = "Plot";
+          if(!leadData.purpose) leadData.purpose = "Investment";
+          
+          // 1. Mobile Check
+           const existing = await Lead.findOne({ mobile: leadData.mobile });
+           if(existing) {
+               results.failed++;
+               results.errors.push({ row: index + 1, mobile: leadData.mobile, error: "Mobile number already exists" });
+               continue;
+           }
+           
+           // 2. Resolve LeadSource (ByName or ID)
+           // If leadSource is a Name string, try to find it. If not found, use a default or error.
+           // For simplicity in Excel upload, we might expect IDs or exact Names.
+           // Let's assume frontend sends IDs or we default to "Excel Import" if we had one.
+           // For now, if leadSource is missing, block it.
+           if(!leadData.leadSource) {
+               // Try to find a default source
+               const defaultSource = await LeadSource.findOne({ name: "Website" }); // Fallback
+               if(defaultSource) leadData.leadSource = defaultSource._id;
+               else throw new Error("Lead Source is required");
+           }
+           
+           await Lead.create({
+               ...leadData,
+               createdBy: userId
+           });
+           results.success++;
+           
+      } catch (error) {
+          results.failed++;
+          results.errors.push({ row: index + 1, mobile: leadData.mobile, error: error.message });
+      }
+  }
+  
+  return {
+      statusCode: 200,
+      message: "Bulk upload processed",
+      data: results
+  };
+};

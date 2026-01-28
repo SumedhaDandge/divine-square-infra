@@ -35,7 +35,7 @@ export function TaskCard({
   onCall,
   onWhatsApp,
 }: TaskCardProps) {
-  const config = taskConfig[type];
+  const config = taskConfig[type] || taskConfig.call;
   const Icon = config.icon;
 
   return (

@@ -98,6 +98,8 @@ const [formData, setFormData] = useState({
   amenities: [] as string[],
   nearbyDevelopments: [] as string[],
   projectImages: [] as File[],
+  plotSizes: "",
+  aboutProject: "",
 });
 
 
@@ -144,6 +146,8 @@ const [formData, setFormData] = useState({
   amenities: formData.amenities,
   nearbyDevelopments: formData.nearbyDevelopments,
   status: formData.status,
+  plotSizes: formData.plotSizes,
+  aboutProject: formData.aboutProject,
 };
 
 
@@ -255,6 +259,37 @@ const [formData, setFormData] = useState({
           {errors.totalUnits && (
             <p className="text-destructive text-xs mt-1">{errors.totalUnits}</p>
           )}
+        </div>
+
+        {/* Plot Sizes */}
+        <div className="crm-card">
+          <label className="text-sm font-semibold text-foreground mb-3 block">
+            Plot Sizes
+          </label>
+          <input
+            type="text"
+            placeholder="e.g., 1200, 1500, 2400 sqft"
+            value={formData.plotSizes}
+            onChange={(e) =>
+              setFormData({ ...formData, plotSizes: e.target.value })
+            }
+            className="w-full h-12 px-4 rounded-xl bg-muted border-0 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+          />
+        </div>
+
+        {/* About Project */}
+        <div className="crm-card">
+          <label className="text-sm font-semibold text-foreground mb-3 block">
+            About Project
+          </label>
+          <textarea
+            placeholder="Enter project description"
+            value={formData.aboutProject}
+            onChange={(e) =>
+              setFormData({ ...formData, aboutProject: e.target.value })
+            }
+            className="w-full min-h-[100px] px-4 py-3 rounded-xl bg-muted border-0 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-y"
+          />
         </div>
 
         {/* Price Range */}

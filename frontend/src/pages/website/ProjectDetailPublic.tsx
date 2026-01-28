@@ -5,6 +5,8 @@ import { useProjects } from "@/hooks/useProjects";
 import { useDataContext } from "@/contex/DataContext";
 import { MapPin, CheckCircle2, Calendar, Phone, Download, ArrowLeft, Ruler, Home, Trees, Shield, IndianRupee, FileCheck, Landmark, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { divineSquareService } from "@/services/DivineInfraService";
 
 // Reveal Component
 const Reveal = ({ children, className, delay = 0 }: { children: React.ReactNode, className?: string, delay?: number }) => {
@@ -221,11 +223,42 @@ export default function ProjectDetailPublic() {
                                <h3 className="text-2xl font-bold mb-2">Interested in this property?</h3>
                                <p className="text-gray-400 mb-8 text-sm">Download the brochure or request a site visit.</p>
 
-                               <form className="space-y-4 mb-8">
-                                   <input type="text" placeholder="Your Name" className="w-full px-5 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-500 focus:outline-none focus:border-emerald-500 focus:bg-white/10 transition-all" />
-                                   <input type="tel" placeholder="Phone Number" className="w-full px-5 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-500 focus:outline-none focus:border-emerald-500 focus:bg-white/10 transition-all" />
+
+                               <form className="space-y-4 mb-8" onSubmit={async (e) => {
+                                   e.preventDefault();
+                                   const form = e.target as HTMLFormElement;
+                                   const name = (form.querySelector('input[type="text"]') as HTMLInputElement).value;
+                                   const mobile = (form.querySelector('input[type="tel"]') as HTMLInputElement).value;
                                    
-                                   <button className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 font-bold text-white shadow-lg shadow-emerald-900/50 hover:shadow-emerald-900/80 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                                   if(!name || !mobile) {
+                                       toast.error("Please fill all fields");
+                                       return;
+                                   }
+
+                                   try {
+                                       const payload = {
+                                           name,
+                                           mobile,
+                                           message: `Interested in Project: ${project?.projectName || "Unknown"}`,
+                                           source: "website_project_detail",
+                                           project: project?._id
+                                       };
+                                       
+                                       const res = await divineSquareService.createInquiry(payload);
+                                       if (res.status === 201 || res.statusCode === 201) {
+                                           toast.success("Request sent successfully!");
+                                           form.reset();
+                                       } else {
+                                            toast.error("Failed to send request.");
+                                       }
+                                   } catch (err) {
+                                       toast.error("An error occurred");
+                                   }
+                               }}>
+                                   <input type="text" placeholder="Your Name" className="w-full px-5 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-500 focus:outline-none focus:border-emerald-500 focus:bg-white/10 transition-all" required />
+                                   <input type="tel" placeholder="Phone Number" className="w-full px-5 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-500 focus:outline-none focus:border-emerald-500 focus:bg-white/10 transition-all" required />
+                                   
+                                   <button type="submit" className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 font-bold text-white shadow-lg shadow-emerald-900/50 hover:shadow-emerald-900/80 hover:scale-[1.02] active:scale-[0.98] transition-all">
                                        Request Site Visit
                                    </button>
                                </form>

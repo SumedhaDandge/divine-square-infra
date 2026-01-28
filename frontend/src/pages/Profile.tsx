@@ -1,11 +1,13 @@
 import { AppShell } from "@/components/layout/AppShell";
 import { 
   User, Phone, Mail, Building2, ChevronRight, 
-  Bell, Shield, HelpCircle, LogOut, Moon, Sun
+  Bell, Shield, HelpCircle, LogOut, Moon, Sun, Users
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+
+import { useAuth } from "@/hooks/useAuth";
 
 const menuItems = [
   { icon: Bell, label: "Notifications", path: "/settings/notifications" },
@@ -15,9 +17,23 @@ const menuItems = [
 
 export default function Profile() {
   const navigate = useNavigate();
-  const [isDark, setIsDark] = useState(false);
+  const { user, logout } = useAuth();
+  const [isDark, setIsDark] = useState(() => {
+    return localStorage.getItem("theme") === "dark";
+  });
+
+  useEffect(() => {
+    if (isDark) {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+    } else {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("theme", "light");
+    }
+  }, [isDark]);
 
   const handleLogout = () => {
+    logout();
     navigate("/login");
   };
 
@@ -32,8 +48,8 @@ export default function Profile() {
             <User className="w-8 h-8" />
           </div>
           <div>
-            <h2 className="text-xl font-bold">Rahul Verma</h2>
-            <p className="text-primary-foreground/70 text-sm">Sales Executive</p>
+            <h2 className="text-xl font-bold">{user?.name || "User"}</h2>
+            <p className="text-primary-foreground/70 text-sm capitalize">{user?.role || "Role"}</p>
             <p className="text-primary-foreground/60 text-xs mt-1">Divine Square Infra</p>
           </div>
         </div>
@@ -50,7 +66,7 @@ export default function Profile() {
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Phone</p>
-                <p className="text-sm font-medium text-foreground">+91 98765 43210</p>
+                <p className="text-sm font-medium text-foreground">{user?.mobile || "-"}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -59,42 +75,32 @@ export default function Profile() {
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Email</p>
-                <p className="text-sm font-medium text-foreground">rahul.verma@divinesquare.in</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
-                <Building2 className="w-5 h-5 text-muted-foreground" />
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">Branch</p>
-                <p className="text-sm font-medium text-foreground">Nagpur Main Office</p>
+                <p className="text-sm font-medium text-foreground">{user?.email || "-"}</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Performance */}
-        <div className="crm-card">
-          <h3 className="text-sm font-semibold text-foreground mb-3">This Month</h3>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-primary">24</p>
-              <p className="text-xs text-muted-foreground">Leads</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-status-hot">8</p>
-              <p className="text-xs text-muted-foreground">Site Visits</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-accent">3</p>
-              <p className="text-xs text-muted-foreground">Conversions</p>
-            </div>
-          </div>
-        </div>
+        {/* ... Performance section kept as static or todo ... */}
 
         {/* Settings */}
         <div className="crm-card !p-0 overflow-hidden">
+          {user?.role === "admin" && (
+             <>
+               <button
+                onClick={() => navigate("/users")}
+                className="w-full flex items-center gap-3 p-4 hover:bg-muted/50 transition-colors"
+               >
+                <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
+                  <Users className="w-5 h-5 text-muted-foreground" />
+                </div>
+                <p className="text-sm font-medium text-foreground flex-1 text-left">Manage Team</p>
+                <ChevronRight className="w-5 h-5 text-muted-foreground" />
+               </button>
+               <div className="h-px bg-border" />
+             </>
+          )}
+
           {/* Theme Toggle */}
           <button
             onClick={() => setIsDark(!isDark)}

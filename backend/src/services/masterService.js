@@ -88,7 +88,7 @@ export const listAmenitiesService = async () => {
 
 
 export const listLeadSourcesService = async () => {
-  const data = await LeadSource.find({ isActive: true }).sort({
+  const data = await LeadSource.find({ status: "active" }).sort({
     name: 1
   });
   return {

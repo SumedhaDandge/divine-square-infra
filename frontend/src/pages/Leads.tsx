@@ -14,6 +14,7 @@ import { useDataContext } from "@/contex/DataContext";
 import useLeads from "@/hooks/useLeads";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Search } from "lucide-react";
 
 
 
@@ -80,15 +81,18 @@ export default function Leads() {
     <AppShell fabAction={() => navigate("/leads/new")}>
       {/* Header */}
       <header className="bg-card border-b border-border px-4 pt-12 pb-4 sticky top-0 z-30">
-        <h1 className="text-xl font-bold">Leads</h1>
+        <div className="flex justify-between items-center mb-4">
+             <h1 className="text-xl font-bold">Leads</h1>
+        </div>
 
-        <div className="relative mt-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
           <input
             type="text"
             placeholder="Search leads..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-12 px-4 rounded-xl bg-muted"
+            className="w-full h-12 pl-10 pr-4 rounded-xl bg-muted border-0 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
           />
         </div>
       </header>
@@ -118,7 +122,7 @@ export default function Leads() {
                 item.budget?.max
               )}
               // onClick={() => navigate(`/leads/view`)}
-              onClick={() => handleViewClick(item.dataObj)}
+              onClick={() => navigate(`/leads/${item._id}`)}
               onCall={() => window.open(`tel:${item.mobile}`)}
               onWhatsApp={() =>
                 window.open(`https://wa.me/${item.mobile}`)

@@ -35,10 +35,63 @@ const Reveal = ({ children, className, delay = 0 }: { children: React.ReactNode,
     );
 };
 
+// ... imports
+import { divineSquareService } from "@/services/DivineInfraService";
+import { toast } from "sonner";
+
+// ... inside component
+
 export default function ContactPage() {
+  const [formData, setFormData] = useState({
+      firstName: "",
+      lastName: "",
+      email: "",
+      mobile: "",
+      message: ""
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setFormData({
+          ...formData,
+          [e.target.name]: e.target.value
+      });
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setIsSubmitting(true);
+      try {
+          const payload = {
+              name: `${formData.firstName} ${formData.lastName}`,
+              email: formData.email,
+              mobile: formData.mobile,
+              message: formData.message,
+              source: "website"
+          };
+          
+          const res = await divineSquareService.createInquiry(payload);
+          if (res.status === 201) {
+              toast.success("Message sent successfully!");
+              setFormData({
+                  firstName: "",
+                  lastName: "",
+                  email: "",
+                  mobile: "",
+                  message: ""
+              });
+          }
+      } catch (error) {
+          console.error(error);
+          toast.error("Failed to send message. Please try again.");
+      } finally {
+          setIsSubmitting(false);
+      }
+  }
 
   return (
     <div className="min-h-screen bg-stone-100 flex flex-col items-center p-0 lg:p-8 relative selection:bg-emerald-500/30 selection:text-emerald-900 overflow-x-hidden">
@@ -128,37 +181,77 @@ export default function ContactPage() {
 
                      {/* RIGHT SIDE: Form (Light) */}
                      <div className="lg:w-[60%] p-10 md:p-14 bg-white flex flex-col justify-center">
-                         <form className="space-y-8">
+                         <form onSubmit={handleSubmit} className="space-y-8">
                              <div className="grid md:grid-cols-2 gap-8">
                                  <div className="group relative">
                                      <label className="text-sm font-bold text-gray-500 mb-1 block group-focus-within:text-emerald-600 transition-colors">First Name</label>
-                                     <input type="text" className="w-full border-b border-gray-200 py-3 text-gray-900 font-medium focus:outline-none focus:border-emerald-600 transition-all font-serif" placeholder="John" />
+                                     <input 
+                                       type="text" 
+                                       name="firstName" 
+                                       value={formData.firstName}
+                                       onChange={handleChange}
+                                       required
+                                       className="w-full border-b border-gray-200 py-3 text-gray-900 font-medium focus:outline-none focus:border-emerald-600 transition-all font-serif" 
+                                       placeholder="John" 
+                                    />
                                  </div>
                                  <div className="group relative">
                                      <label className="text-sm font-bold text-gray-500 mb-1 block group-focus-within:text-emerald-600 transition-colors">Last Name</label>
-                                     <input type="text" className="w-full border-b border-gray-200 py-3 text-gray-900 font-medium focus:outline-none focus:border-emerald-600 transition-all font-serif" placeholder="Doe" />
+                                     <input 
+                                        type="text" 
+                                        name="lastName"
+                                        value={formData.lastName}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full border-b border-gray-200 py-3 text-gray-900 font-medium focus:outline-none focus:border-emerald-600 transition-all font-serif" 
+                                        placeholder="Doe" 
+                                    />
                                  </div>
                              </div>
 
                              <div className="grid md:grid-cols-2 gap-8">
                                  <div className="group relative">
                                      <label className="text-sm font-bold text-gray-500 mb-1 block group-focus-within:text-emerald-600 transition-colors">Email</label>
-                                     <input type="email" className="w-full border-b border-gray-200 py-3 text-gray-900 font-medium focus:outline-none focus:border-emerald-600 transition-all font-serif" placeholder="john@example.com" />
+                                     <input 
+                                        type="email" 
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        className="w-full border-b border-gray-200 py-3 text-gray-900 font-medium focus:outline-none focus:border-emerald-600 transition-all font-serif" 
+                                        placeholder="john@example.com" 
+                                    />
                                  </div>
                                  <div className="group relative">
                                      <label className="text-sm font-bold text-gray-500 mb-1 block group-focus-within:text-emerald-600 transition-colors">Phone</label>
-                                     <input type="tel" className="w-full border-b border-gray-200 py-3 text-gray-900 font-medium focus:outline-none focus:border-emerald-600 transition-all font-serif" placeholder="+91 00000 00000" />
+                                     <input 
+                                        type="tel" 
+                                        name="mobile"
+                                        value={formData.mobile}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full border-b border-gray-200 py-3 text-gray-900 font-medium focus:outline-none focus:border-emerald-600 transition-all font-serif" 
+                                        placeholder="+91 00000 00000" 
+                                    />
                                  </div>
                              </div>
 
                              <div className="group relative">
                                  <label className="text-sm font-bold text-gray-500 mb-1 block group-focus-within:text-emerald-600 transition-colors">Message</label>
-                                 <textarea rows={3} className="w-full border-b border-gray-200 py-3 text-gray-900 font-medium focus:outline-none focus:border-emerald-600 transition-all resize-none font-serif" placeholder="Write your message here..."></textarea>
+                                 <textarea 
+                                    rows={3} 
+                                    name="message"
+                                    value={formData.message}
+                                    onChange={handleChange}
+                                    className="w-full border-b border-gray-200 py-3 text-gray-900 font-medium focus:outline-none focus:border-emerald-600 transition-all resize-none font-serif" 
+                                    placeholder="Write your message here..."></textarea>
                              </div>
 
                              <div className="pt-4 flex justify-end">
-                                 <button className="px-12 py-4 bg-emerald-950 text-white font-bold rounded-lg hover:bg-emerald-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 flex items-center gap-3">
-                                     Send Message <Send size={18} />
+                                 <button 
+                                    type="submit" 
+                                    disabled={isSubmitting}
+                                    className="px-12 py-4 bg-emerald-950 text-white font-bold rounded-lg hover:bg-emerald-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 flex items-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed">
+                                     {isSubmitting ? "Sending..." : "Send Message"} <Send size={18} />
                                  </button>
                              </div>
                          </form>

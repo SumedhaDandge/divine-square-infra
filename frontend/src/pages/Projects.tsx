@@ -103,7 +103,7 @@ export default function Projects() {
             <div
               key={project._id}
               className="crm-card animate-slide-up cursor-pointer"
-              onClick={() => navigate(`/projects/${project._id}/plots`)}
+              onClick={() => navigate(`/projects/${project._id || project.id}`)}
             >
               <div className="flex items-start gap-3">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">

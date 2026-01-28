@@ -3,6 +3,7 @@ import {
   listLeadsService,
   getLeadDetailService,
   updateLeadService,
+  bulkCreateLeadsService,
 } from "../services/leadService.js";
 
 export const createLead = async (req, res) => {
@@ -16,6 +17,18 @@ export const createLead = async (req, res) => {
     });
   }
 };
+
+export const bulkCreateLeads = async (req, res) => {
+    try {
+        const result = await bulkCreateLeadsService(req.body, req.user.id);
+        return res.status(result.statusCode).json(result);
+    } catch(error) {
+        return res.status(500).json({
+            message: "Failed to bulk create leads",
+            error: error.message
+        });
+    }
+}
 
 export const listLeads = async (req, res) => {
   try {

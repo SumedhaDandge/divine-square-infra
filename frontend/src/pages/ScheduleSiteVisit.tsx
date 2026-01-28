@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, MapPin, Calendar as CalendarIcon, Clock, ChevronDown, Building2 } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { useCreateSiteVisit } from "@/hooks/useSiteVisits";
-import { useLeads } from "@/hooks/useLeads";
+import useLeads from "@/hooks/useLeads";
 import { useProjects } from "@/hooks/useProjects";
+import { useDataContext } from "@/contex/DataContext";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
@@ -32,8 +33,14 @@ export default function ScheduleSiteVisit() {
   const leadIdParam = searchParams.get("leadId");
   
   const createSiteVisit = useCreateSiteVisit();
-  const { data: leads } = useLeads();
-  const { data: projects } = useProjects();
+  const { leads, projects } = useDataContext();
+  const { fetchLeads } = useLeads();
+  const { fetchProjects } = useProjects();
+
+  useEffect(() => {
+    fetchLeads();
+    fetchProjects();
+  }, []);
   
   const [formData, setFormData] = useState({
     lead_id: leadIdParam || "",

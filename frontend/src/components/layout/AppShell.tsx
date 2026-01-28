@@ -6,21 +6,21 @@ interface AppShellProps {
   children: ReactNode;
   showNav?: boolean;
   showBottomNav?: boolean;
-  showFab?: boolean;
-  fabAction?: () => void;
+  showFab?: boolean; // Restored
+  fabAction?: () => void; // Restored
 }
 
 export function AppShell({ 
   children, 
   showNav = true,
   showBottomNav = true,
-  showFab = true,
+  showFab = true, // Restored default
   fabAction 
 }: AppShellProps) {
   return (
     <div className="app-shell">
       {children}
-      {showFab && <FloatingActionButton onClick={fabAction} />}
+      {showFab && fabAction && <FloatingActionButton onClick={fabAction} />}
       {(showNav || showBottomNav) && <BottomNav />}
     </div>
   );

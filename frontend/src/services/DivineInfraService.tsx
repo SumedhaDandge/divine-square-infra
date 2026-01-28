@@ -43,6 +43,10 @@ class DivineSquareService {
     return divineSquareApi.createLead(data);
   }
 
+  bulkCreateLeads(data: any): Promise<any> {
+    return divineSquareApi.bulkCreateLeads(data);
+  }
+
   getLead(leadId: string): Promise<any> {
     return divineSquareApi.getLead(leadId);
   }
@@ -58,7 +62,53 @@ class DivineSquareService {
     return divineSquareApi.listLeadTasksById( leadId);
   }
 
+  listAllTasks(): Promise<any> {
+      return divineSquareApi.listAllTasks();
+  }
 
+  updateLeadTask(taskId: string, data: any): Promise<any> {
+    return divineSquareApi.updateLeadTask(taskId, data);
+  }
+
+  // Inquiries
+  listInquiries(): Promise<any> {
+    return divineSquareApi.listInquiries();
+  }
+
+  createInquiry(data: any): Promise<any> {
+    return divineSquareApi.createInquiry(data);
+  }
+
+  updateInquiry(id: string, data: any): Promise<any> {
+    return divineSquareApi.updateInquiry(id, data);
+  }
+
+  deleteInquiry(id: string): Promise<any> {
+    return divineSquareApi.deleteInquiry(id);
+  }
+
+  // Users
+  listUsers(): Promise<any> {
+    return divineSquareApi.listUsers();
+  }
+
+  createUser(data: any): Promise<any> {
+    return divineSquareApi.createUser(data);
+  }
+
+  // Quotations
+  createQuotation(data: any): Promise<any> {
+      return divineSquareApi.createQuotation(data);
+  }
+
+  listQuotations(leadId: string): Promise<any> {
+      return divineSquareApi.listQuotations(leadId);
+  }
+
+  // Task Actions
+  cancelTask(taskId: string): Promise<any> {
+      return divineSquareApi.cancelTask(taskId);
+  }
 }
 
 const divineSquareService = new DivineSquareService();

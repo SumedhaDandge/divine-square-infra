@@ -16,6 +16,7 @@ import AboutPage from "./pages/website/AboutPage";
 import ContactPage from "./pages/website/ContactPage";
 import BookSiteVisitPage from "./pages/website/BookSiteVisitPage";
 import CareersPage from "./pages/website/CareersPage";
+import AddLead from "./pages/AddLead";
 
 const AppRoutes = () => {
   const navigate = useNavigate(); 
@@ -49,6 +50,7 @@ const AppRoutes = () => {
             element={route.element}
           />
         ))}
+        <Route path="/leads/edit/:id" element={<AddLead />} />
       </Route>
     </Routes>
   );

@@ -2,85 +2,93 @@ import mongoose from "mongoose";
 
 const projectSchema = new mongoose.Schema(
   {
-    projectName: { type: String, required: true, trim: true , unique: true },
+    projectName: { type: String, required: true, trim: true, unique: true },
 
     location: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
 
     projectType: {
       type: String,
       enum: ["commercial", "residential", "both"],
-      required: true
+      required: true,
     },
 
     totalUnits: {
       type: Number,
       required: true,
-      min: 1
+      min: 1,
     },
 
     priceRange: {
       min: {
         type: Number,
-        required: true
+        required: true,
       },
       max: {
         type: Number,
-        required: false
-      }
+        required: false,
+      },
     },
 
-nearbyDevelopments: [
-  {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "NearbyDevelopment"
-  }
-],
+    nearbyDevelopments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "NearbyDevelopment",
+      },
+    ],
 
-amenities: [
-  {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Amenity"
-  }
-],
-
+    amenities: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Amenity",
+      },
+    ],
 
     projectImages: [
       {
-        type: String // store image URL / path
-      }
+        type: String, // store image URL / path
+      },
     ],
 
     status: {
       type: String,
       enum: ["active", "inactive"],
-      default: "active"
+      default: "active",
     },
 
     projectStage: {
-  type: String,
-  enum: ["upcoming", "ongoing", "completed"],
-  required: true,
-  default: "upcoming"
-},
+      type: String,
+      enum: ["upcoming", "ongoing", "completed"],
+      required: true,
+      default: "upcoming",
+    },
 
+    plotSizes: {
+      type: String, // e.g., "1200, 1500, 2400 sqft"
+      trim: true,
+    },
+
+    aboutProject: {
+      type: String,
+      trim: true,
+    },
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
+      ref: "User",
     },
 
     createdAt: {
       type: Date,
-      default: Date.now
-    }
+      default: Date.now,
+    },
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 );
 
 export default mongoose.model("Project", projectSchema);

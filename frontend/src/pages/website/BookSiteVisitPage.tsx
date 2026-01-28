@@ -2,14 +2,44 @@
 import { useState } from "react";
 import { Calendar, MapPin, User, Phone, CheckCircle2, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { divineSquareService } from "@/services/DivineInfraService";
+import { toast } from "sonner";
 
 export default function BookSiteVisitPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+      name: "",
+      mobile: "",
+      date: "",
+      time: "",
+      location: ""
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate submission
-    setTimeout(() => setSubmitted(true), 1000);
+    setIsSubmitting(true);
+    
+    try {
+        const payload = {
+            name: formData.name,
+            mobile: formData.mobile,
+            message: `Site Visit Requested. Date: ${formData.date}, Time: ${formData.time}, Location: ${formData.location}`,
+            source: "website_site_visit"
+        };
+        
+        const res = await divineSquareService.createInquiry(payload);
+        if (res.status === 201 || res.statusCode === 201) {
+            setSubmitted(true);
+        } else {
+             toast.error("Something went wrong. Please try again.");
+        }
+    } catch (error) {
+        console.error(error);
+        toast.error("Failed to request site visit.");
+    } finally {
+        setIsSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -81,7 +111,14 @@ export default function BookSiteVisitPage() {
                              <label className="text-sm font-bold text-gray-700">Full Name</label>
                              <div className="relative">
                                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                                 <input required type="text" className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none font-medium" placeholder="Enter your name" />
+                                 <input 
+                                    required 
+                                    type="text" 
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none font-medium" 
+                                    placeholder="Enter your name" 
+                                 />
                              </div>
                          </div>
 
@@ -89,7 +126,14 @@ export default function BookSiteVisitPage() {
                              <label className="text-sm font-bold text-gray-700">Phone Number</label>
                              <div className="relative">
                                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                                 <input required type="tel" className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none font-medium" placeholder="+91 98765..." />
+                                 <input 
+                                    required 
+                                    type="tel" 
+                                    value={formData.mobile}
+                                    onChange={(e) => setFormData({...formData, mobile: e.target.value})}
+                                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none font-medium" 
+                                    placeholder="+91 98765..." 
+                                 />
                              </div>
                          </div>
 
@@ -97,13 +141,25 @@ export default function BookSiteVisitPage() {
                              <div className="space-y-2">
                                  <label className="text-sm font-bold text-gray-700">Preferred Date</label>
                                  <div className="relative">
-                                     <input required type="date" className="w-full pl-4 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none font-medium text-gray-600" />
+                                     <input 
+                                        required 
+                                        type="date" 
+                                        value={formData.date}
+                                        onChange={(e) => setFormData({...formData, date: e.target.value})}
+                                        className="w-full pl-4 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none font-medium text-gray-600" 
+                                     />
                                  </div>
                              </div>
                              <div className="space-y-2">
                                   <label className="text-sm font-bold text-gray-700">Preferred Time</label>
                                   <div className="relative">
-                                      <input required type="time" className="w-full pl-4 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none font-medium text-gray-600" />
+                                      <input 
+                                        required 
+                                        type="time" 
+                                        value={formData.time}
+                                        onChange={(e) => setFormData({...formData, time: e.target.value})}
+                                        className="w-full pl-4 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none font-medium text-gray-600" 
+                                      />
                                   </div>
                               </div>
                          </div>
@@ -112,12 +168,21 @@ export default function BookSiteVisitPage() {
                              <label className="text-sm font-bold text-gray-700">Pickup Location (Optional)</label>
                              <div className="relative">
                                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                                 <input type="text" className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none font-medium" placeholder="Enter landmark or address" />
+                                 <input 
+                                    type="text" 
+                                    value={formData.location}
+                                    onChange={(e) => setFormData({...formData, location: e.target.value})}
+                                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none font-medium" 
+                                    placeholder="Enter landmark or address" 
+                                 />
                              </div>
                          </div>
 
-                         <button type="submit" className="w-full py-4 bg-gray-900 text-white font-bold text-lg rounded-xl hover:bg-emerald-600 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-2 group">
-                             Confirm Booking <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                         <button 
+                            type="submit" 
+                            disabled={isSubmitting}
+                            className="w-full py-4 bg-gray-900 text-white font-bold text-lg rounded-xl hover:bg-emerald-600 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed">
+                             {isSubmitting ? "Booking..." : "Confirm Booking"} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                          </button>
 
                          <p className="text-center text-xs text-gray-400">

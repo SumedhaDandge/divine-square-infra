@@ -11,6 +11,9 @@ class DivineSquareApi {
     LEAD_SOURCES: "/masters/lead-source",
     LEADS: "/leads",
     LEAD_TASKS: "/lead-tasks",
+    INQUIRIES: "/inquiries",
+    USERS: "/users",
+    QUOTATIONS: "/quotations",
   };
 
   Login(data: any): Promise<any> {
@@ -55,6 +58,10 @@ class DivineSquareApi {
     return api._post(this._urlMapping.LEADS, data);
   }
 
+  bulkCreateLeads(data: any): Promise<any> {
+      return api._post(`${this._urlMapping.LEADS}/bulk`, data);
+  }
+
   getLead(leadId: string): Promise<any> {
     return api._get(`${this._urlMapping.LEADS}/${leadId}`);
   }
@@ -67,6 +74,10 @@ class DivineSquareApi {
     return api._get(`${this._urlMapping.LEAD_TASKS}/${leadId}`);
   }
 
+  listAllTasks(): Promise<any> {
+      return api._get(this._urlMapping.LEAD_TASKS);
+  }
+
   listLeadTasksById(leadId: string): Promise<any> {
     return api._get(`${this._urlMapping.LEAD_TASKS}/${leadId}`);
   }
@@ -74,7 +85,50 @@ class DivineSquareApi {
   createLeadTask(data: any): Promise<any> {
     return api._post(`${this._urlMapping.LEAD_TASKS}`,data);
   }
-  // completeLeadTask()
+
+  updateLeadTask(taskId: string, data: any): Promise<any> {
+      return api._put(`${this._urlMapping.LEAD_TASKS}/${taskId}`, data);
+  }
+
+  // Inquiries
+  listInquiries(): Promise<any> {
+    return api._get(this._urlMapping.INQUIRIES);
+  }
+
+  createInquiry(data: any): Promise<any> {
+    return api._post(this._urlMapping.INQUIRIES, data);
+  }
+
+  updateInquiry(id: string, data: any): Promise<any> {
+    return api._patch(`${this._urlMapping.INQUIRIES}/${id}`, data);
+  }
+
+  deleteInquiry(id: string): Promise<any> {
+    return api._delete(`${this._urlMapping.INQUIRIES}/${id}`);
+  }
+
+  // Users
+  listUsers(): Promise<any> {
+    return api._get(this._urlMapping.USERS);
+  }
+
+  createUser(data: any): Promise<any> {
+    return api._post(this._urlMapping.USERS, data);
+  }
+
+  // Quotations
+  createQuotation(data: any): Promise<any> {
+      return api._post(this._urlMapping.QUOTATIONS, data);
+  }
+
+  listQuotations(leadId: string): Promise<any> {
+      return api._get(`${this._urlMapping.QUOTATIONS}/${leadId}`);
+  }
+
+  // Task Actions
+  cancelTask(taskId: string): Promise<any> {
+      return api._patch(`${this._urlMapping.LEAD_TASKS}/cancel/${taskId}`, {});
+  }
 }
 
 const divineSquareApi = new DivineSquareApi();

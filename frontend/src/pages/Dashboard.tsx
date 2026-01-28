@@ -1,90 +1,112 @@
+import { useNavigate } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { TaskCard } from "@/components/dashboard/TaskCard";
 import { PipelineBar } from "@/components/dashboard/PipelineBar";
 import { Users, PhoneCall, MapPin, TrendingUp, Calendar, AlertCircle, Loader2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-
+import useLeads from "@/hooks/useLeads";
+import { useLeadTasks } from "@/hooks/useLeadTasks";
 import { useSiteVisits } from "@/hooks/useSiteVisits";
 import { format, isToday, isPast, isFuture } from "date-fns";
+import { useEffect } from "react";
+import { useDataContext } from "@/contex/DataContext";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  // const { profile, loading: authLoading } = useAuth();
-  // const { data: leads, isLoading: leadsLoading } = useLeads();
-  // const { data: tasks, isLoading: tasksLoading } = useTasks();
-  // const { data: siteVisits } = useSiteVisits();
+  const { user, loading: authLoading } = useAuth();
+  const { leads } = useDataContext();
+  const { fetchLeads, isLoading: leadsLoading } = useLeads();
+  const { tasks, fetchAllTasks, isLoading: tasksLoading } = useLeadTasks();
+  const { data: siteVisits } = useSiteVisits();
 
-  // const isLoading = false || leadsLoading || tasksLoading;
+  useEffect(() => {
+      fetchLeads();
+      fetchAllTasks();
+  }, []);
+
+  const isLoading = leadsLoading || tasksLoading;
 
   // Calculate metrics
-  // const totalLeads = leads?.length || 0;
-  // const todayTasks = tasks?.filter(t => !t.completed && isToday(new Date(t.due_date))) || [];
-  // const overdueTasks = tasks?.filter(t => !t.completed && isPast(new Date(t.due_date)) && !isToday(new Date(t.due_date))) || [];
-  // const upcomingSiteVisits = siteVisits?.filter(sv => sv.status === "scheduled" && isFuture(new Date(sv.scheduled_date))).length || 0;
-  // const conversions = leads?.filter(l => l.status === "won").length || 0;
+  const totalLeads = leads?.length || 0;
+  
+  // Need to handle tasks which might be array or object. Assuming array based on usage.
+  const taskList = Array.isArray(tasks) ? tasks : [];
+  
+  const todayTasks = taskList.filter((t: any) => !t.completed && t.dueDate && isToday(new Date(t.dueDate)));
+  const overdueTasks = taskList.filter((t: any) => !t.completed && t.dueDate && isPast(new Date(t.dueDate)) && !isToday(new Date(t.dueDate)));
+  const upcomingSiteVisits = siteVisits?.filter((sv: any) => sv.status === "scheduled" && isFuture(new Date(sv.scheduled_date))).length || 0;
+  const conversions = leads?.filter((l: any) => l.leadStatus === "closed").length || 0; // Assuming 'closed' is 'won'
 
   // Pipeline stages
-  // const pipelineStages = [
-  //   { label: "New", count: leads?.filter(l => l.status === "new").length || 0, color: "bg-status-new" },
-  //   { label: "Contacted", count: leads?.filter(l => l.status === "contacted").length || 0, color: "bg-status-cold" },
-  //   { label: "Qualified", count: leads?.filter(l => l.status === "qualified").length || 0, color: "bg-status-warm" },
-  //   { label: "Negotiation", count: leads?.filter(l => l.status === "negotiation").length || 0, color: "bg-status-hot" },
-  //   { label: "Won", count: leads?.filter(l => l.status === "won").length || 0, color: "bg-primary" },
-  //   { label: "Lost", count: leads?.filter(l => l.status === "lost").length || 0, color: "bg-status-lost" },
-  // ];
+  const pipelineStages = [
+    { label: "New", count: leads?.filter((l: any) => l.leadStatus === "new").length || 0, color: "bg-status-new" },
+    { label: "Contacted", count: leads?.filter((l: any) => l.leadStatus === "contacted").length || 0, color: "bg-status-cold" },
+    { label: "Qualified", count: leads?.filter((l: any) => l.leadStatus === "qualified").length || 0, color: "bg-status-warm" },
+    { label: "Unresponsive", count: leads?.filter((l: any) => l.leadStatus === "unresponsive").length || 0, color: "bg-status-lost" },
+    { label: "Closed", count: leads?.filter((l: any) => l.leadStatus === "closed").length || 0, color: "bg-primary" },
+    // { label: "Lost", count: leads?.filter((l: any) => l.leadStatus === "lost").length || 0, color: "bg-status-lost" },
+  ];
 
-  // const getTaskStatus = (task: typeof todayTasks[0]): "hot" | "warm" | "new" | "cold" => {
-  //   const typeMap: Record<string, "hot" | "warm" | "new" | "cold"> = {
-  //     call: "hot",
-  //     site_visit: "warm",
-  //     whatsapp: "new",
-  //     meeting: "hot",
-  //     email: "cold",
-  //     reminder: "warm",
-  //   };
-  //   return typeMap[task.type] || "new";
-  // };
+  const getTaskStatus = (task: any): "hot" | "warm" | "new" | "cold" => {
+    const typeMap: Record<string, "hot" | "warm" | "new" | "cold"> = {
+      call: "hot",
+      site_visit: "warm",
+      whatsapp: "new",
+      meeting: "hot",
+      email: "cold",
+      reminder: "warm",
+    };
+    return typeMap[task.activityType] || "new";
+  };
 
-  // const getGreeting = () => {
-  //   const hour = new Date().getHours();
-  //   if (hour < 12) return "Good Morning";
-  //   if (hour < 17) return "Good Afternoon";
-  //   return "Good Evening";
-  // };
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good Morning";
+    if (hour < 17) return "Good Afternoon";
+    return "Good Evening";
+  };
 
-  // if (isLoading) {
-  //   return (
-  //     <AppShell fabAction={() => navigate("/leads/new")}>
-  //       <div className="flex-1 flex items-center justify-center">
-  //         <Loader2 className="w-8 h-8 animate-spin text-primary" />
-  //       </div>
-  //     </AppShell>
-  //   );
-  // }
+  if (isLoading) {
+    return (
+      <AppShell>
+        <div className="flex-1 flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell fabAction={() => navigate("/leads/new")}>
       {/* Header */}
-      {/* <header className="bg-primary text-primary-foreground px-4 pt-12 pb-6">
-        <div className="flex items-center justify-between mb-1">
-          <p className="text-primary-foreground/80 text-sm">{getGreeting()}</p>
-          <span className="text-xs bg-primary-foreground/20 px-2 py-1 rounded-full">
-            Divine Square Infra
-          </span>
+      {/* Header */}
+      <header className="bg-primary text-primary-foreground px-4 pt-12 pb-6 flex items-center justify-between">
+        <div>
+           <div className="flex items-center gap-2 mb-1">
+             <p className="text-primary-foreground/80 text-sm">{getGreeting()}</p>
+             <span className="text-xs bg-primary-foreground/20 px-2 py-1 rounded-full">
+               Divine Square
+             </span>
+           </div>
+           {/* <h1 className="text-2xl font-bold">{user?.name || "Welcome"}</h1> */}
+           <p className="text-primary-foreground/70 text-sm mt-1 flex items-center gap-1">
+             <Calendar className="w-4 h-4" />
+             {format(new Date(), "EEEE, d MMMM yyyy")}
+           </p>
         </div>
-        <h1 className="text-2xl font-bold">{profile?.full_name || "Welcome"}</h1>
-        <p className="text-primary-foreground/70 text-sm mt-1 flex items-center gap-1">
-          <Calendar className="w-4 h-4" />
-          {format(new Date(), "EEEE, d MMMM yyyy")}
-        </p>
-      </header> */}
+        <button 
+           onClick={() => navigate("/settings/notifications")}
+           className="w-10 h-10 rounded-full bg-primary-foreground/20 flex items-center justify-center transition-opacity hover:opacity-90"
+        >
+             <AlertCircle className="w-6 h-6 text-primary-foreground" />
+        </button>
+      </header>
 
       {/* Main Content */}
       <main className="flex-1 px-4 -mt-4 space-y-4 pb-6">
         {/* Metrics Grid */}
-        {/* <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3">
           <MetricCard
             icon={Users}
             label="Total Leads"
@@ -108,55 +130,55 @@ export default function Dashboard() {
             value={conversions}
             trend={conversions > 0 ? { value: 5, positive: true } : undefined}
           />
-        </div> */}
+        </div>
 
         {/* Pipeline */}
-        {/* {totalLeads > 0 && <PipelineBar stages={pipelineStages} />} */}
+        {totalLeads > 0 && <PipelineBar stages={pipelineStages} />}
 
         {/* Overdue Section */}
-        {/* {overdueTasks.length > 0 && (
+        {overdueTasks.length > 0 && (
           <section>
             <div className="flex items-center gap-2 mb-3">
               <AlertCircle className="w-4 h-4 text-status-lost" />
               <h2 className="text-sm font-semibold text-status-lost">Overdue ({overdueTasks.length})</h2>
             </div>
             <div className="space-y-3">
-              {overdueTasks.slice(0, 3).map((task) => (
+              {overdueTasks.slice(0, 3).map((task: any) => (
                 <TaskCard
-                  key={task.id}
-                  id={task.id}
-                  type={task.type}
-                  leadName={task.leads?.name || "Unknown"}
+                  key={task._id}
+                  id={task._id}
+                  type={task.activityType}
+                  leadName={task.lead?.customerName || "Unknown"}
                   leadStatus={getTaskStatus(task)}
-                  time={format(new Date(task.due_date), "MMM d, h:mm a")}
+                  time={format(new Date(task.dueDate), "MMM d, h:mm a")}
                   project={task.title}
                   isOverdue={true}
-                  onCall={() => task.leads && window.open(`tel:${task.leads.phone}`)}
-                  onWhatsApp={() => task.leads && window.open(`https://wa.me/${task.leads.phone.replace(/\s/g, "")}`)}
+                  onCall={() => task.lead && window.open(`tel:${task.lead.mobile}`)}
+                  onWhatsApp={() => task.lead && window.open(`https://wa.me/${task.lead.mobile.replace(/\s/g, "")}`)}
                 />
               ))}
             </div>
           </section>
-        )} */}
+        )}
 
         {/* Today's Tasks */}
-        {/* <section>
+        <section>
           <h2 className="text-sm font-semibold text-foreground mb-3">
             {todayTasks.length > 0 ? "Today's Tasks" : "No tasks for today"}
           </h2>
           {todayTasks.length > 0 ? (
             <div className="space-y-3">
-              {todayTasks.map((task) => (
+              {todayTasks.map((task: any) => (
                 <TaskCard
-                  key={task.id}
-                  id={task.id}
-                  type={task.type}
-                  leadName={task.leads?.name || "Unknown"}
+                  key={task._id}
+                  id={task._id}
+                  type={task.activityType}
+                  leadName={task.lead?.customerName || "Unknown"}
                   leadStatus={getTaskStatus(task)}
-                  time={format(new Date(task.due_date), "h:mm a")}
+                  time={format(new Date(task.dueDate), "h:mm a")}
                   project={task.title}
-                  onCall={() => task.leads && window.open(`tel:${task.leads.phone}`)}
-                  onWhatsApp={() => task.leads && window.open(`https://wa.me/${task.leads.phone.replace(/\s/g, "")}`)}
+                  onCall={() => task.lead && window.open(`tel:${task.lead.mobile}`)}
+                  onWhatsApp={() => task.lead && window.open(`https://wa.me/${task.lead.mobile.replace(/\s/g, "")}`)}
                 />
               ))}
             </div>
@@ -176,7 +198,7 @@ export default function Dashboard() {
               </button>
             </div>
           )}
-        </section> */}
+        </section>
       </main>
     </AppShell>
   );

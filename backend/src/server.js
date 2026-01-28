@@ -14,10 +14,14 @@ import masterRoutes from "./routes/masterRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
 import leadRoutes from "./routes/leadRoutes.js";
 import leadTaskRoutes from "./routes/leadTaskRoutes.js";
+import inquiryRoutes from "./routes/inquiryRoutes.js";
+import quotationRoutes from "./routes/quotationRoutes.js";
 
-import "./cron/taskReminderCron.js";
+import { startTaskScheduler } from "./jobs/taskScheduler.js";
 
 const app = express();
+
+startTaskScheduler(); // 🚀 Start the robust scheduler
 
 const allowedOrigins = ["*"];
 
@@ -43,6 +47,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// 📂 Serve Static Files (for generated PDFs)
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+
 connectDB();
 
 // Routes
@@ -52,6 +63,8 @@ app.use("/api/masters", masterRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/leads", leadRoutes);
 app.use("/api/lead-tasks", leadTaskRoutes);
+app.use("/api/inquiries", inquiryRoutes);
+app.use("/api/quotations", quotationRoutes);
 
 
 // Create a default admin user if none exists

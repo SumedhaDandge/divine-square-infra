@@ -22,6 +22,27 @@ export const createLeadTaskService = async (payload, userId) => {
     };
   }
 
+  // 🕒 Calculate scheduledAt from Date and Time
+  let scheduledAt = new Date();
+  if (payload.taskDate && payload.taskTime) {
+    const d = new Date(payload.taskDate);
+    // Parse "11:45 PM" or "11:45 AM"
+    const timeMatch = payload.taskTime.match(/(\d+):(\d+)\s?(AM|PM)?/i);
+    if (timeMatch) {
+      let hours = parseInt(timeMatch[1]);
+      const minutes = parseInt(timeMatch[2]);
+      const meridiem = timeMatch[3];
+
+      if (meridiem) {
+          if (meridiem.toUpperCase() === "PM" && hours < 12) hours += 12;
+          if (meridiem.toUpperCase() === "AM" && hours === 12) hours = 0;
+      }
+      
+      d.setHours(hours, minutes, 0, 0);
+      scheduledAt = d;
+    }
+  }
+
   // ✅ Create task
   const task = await LeadTask.create({
     lead: payload.lead,
@@ -30,6 +51,7 @@ export const createLeadTaskService = async (payload, userId) => {
     remark: payload.remark,
     taskDate: payload.taskDate,
     taskTime: payload.taskTime,
+    scheduledAt: scheduledAt,
     createdBy: userId,
   });
 
@@ -50,7 +72,7 @@ export const listLeadTasksService = async (leadId) => {
   const tasks = await LeadTask.find({ lead: leadId })
     .populate("assignedTo", "name email")
     .populate("createdBy", "name")
-    .sort({ dueDate: 1 });
+    .sort({ scheduledAt: 1 }); // 📅 Sorted by schedule
 
   return {
     statusCode: 200,
@@ -89,7 +111,7 @@ export const listAllTasksService = async (query, userId) => {
     const end = new Date();
     end.setHours(23, 59, 59, 999);
 
-    filter.dueDate = { $gte: start, $lte: end };
+    filter.scheduledAt = { $gte: start, $lte: end }; // ✅ Fixed field
 
     // Dashboard usually wants pending only
     filter.status = "pending";
@@ -98,7 +120,7 @@ export const listAllTasksService = async (query, userId) => {
   const tasks = await LeadTask.find(filter)
     .populate("lead", "customerName mobile")
     .populate("assignedTo", "name")
-    .sort({ dueDate: 1 });
+    .sort({ scheduledAt: 1 }); // ✅ Fixed sort
 
   return tasks;
 };

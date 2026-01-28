@@ -38,16 +38,24 @@ const leadTaskSchema = new mongoose.Schema({
     required: true,
   },
 
+  // 📅 Combined Date & Time (Crucial for sorting & cron)
+  scheduledAt: {
+    type: Date,
+    required: true,
+    index: true // ⚡ Index for fast cron queries
+  },
+
   status: {
     type: String,
     enum: TASK_STATUS,
     default: "pending",
   },
 
-  // 🔔 NEW FIELD
-  reminderSent: {
-    type: Boolean,
-    default: false,
+  // 🔔 REMINDER TRACKING
+  remindersSent: {
+    min15: { type: Boolean, default: false },
+    min10: { type: Boolean, default: false },
+    min5: { type: Boolean, default: false }
   },
 
   completedAt: Date,

@@ -91,3 +91,17 @@ export const completeTask = async (req, res) => {
   }
 };
 
+
+export const cancelTask = async (req, res) => {
+    try {
+      const task = await LeadTask.findById(req.params.taskId);
+      if (!task) return errorResponse(res, 404, "Task not found");
+      
+      task.status = "cancelled";
+      await task.save();
+      
+      return successResponse(res, 200, "Task cancelled", task);
+    } catch (error) {
+      return errorResponse(res, 500, error.message);
+    }
+  };

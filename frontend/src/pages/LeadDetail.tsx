@@ -44,24 +44,25 @@ export default function LeadDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { leads } = useDataContext();
-  const lead = leads.find((l: any) => l.id === id);
+  const lead = leads.find((l: any) => l._id === id || l.id === id);
   const { fetchLeads, isLoading } = useLeads();
-  // const { data: tasks } = useLeadTasks(id || "");
-  // const { data: siteVisits } = useLeadSiteVisits(id || "");
-  // const { data: quotations } = useLeadQuotations(id || "");
-  const { getTaskByID, tasksLoading } = useLeadTasks();
+  const { data: quotations } = useLeadQuotations(lead?._id || "");
+  const { getTaskByID, tasksLoading, cancelTask } = useLeadTasks();
   const { taskByID } = useDataContext();
 
-  console.log("Lead Detail Rendered for ID:", id, "Lead Data:", lead._id);
+  console.log("Lead Detail Rendered for ID:", id, "Lead Found:", !!lead);
 
   useEffect(() => {
-    getTaskByID(lead._id);
-  }, []);
-  useEffect(() => {
-    fetchLeads();
+    if(!leads || leads.length === 0) {
+        fetchLeads();
+    }
   }, [id]);
 
-  console.log("taskByID",taskByID)
+  useEffect(() => {
+      if (lead?._id) {
+          getTaskByID(lead._id);
+      }
+  }, [lead?._id]);
 
   // Combine all activities into timeline
   const timeline =
@@ -70,13 +71,28 @@ export default function LeadDetail() {
         id: t._id,
         type: t.taskType,
         title: t.remark,
-        // description: t.description || "",
-        time: format(new Date(t.taskTime), "MMM d, h:mm a"),
+        scheduledAt: t.scheduledAt,
+        time: (() => {
+            const d = new Date(t.scheduledAt || t.taskDate || t.taskTime);
+            return !isNaN(d.getTime()) ? format(d, "MMM d, h:mm a") : "No date";
+        })(),
+        status: t.status,
         completed: t.status === "completed",
-        sortDate: new Date(t.taskDate),
+        cancelled: t.status === "cancelled",
+        sortDate: (() => {
+             const d = new Date(t.scheduledAt || t.taskDate || t.taskTime);
+             return !isNaN(d.getTime()) ? d : new Date();
+        })(),
       }))
       .sort((a: any, b: any) => b.sortDate.getTime() - a.sortDate.getTime()) ||
     [];
+
+  const handleCancelTask = async (taskId: string) => {
+    if (confirm("Are you sure you want to cancel this task?")) {
+        await cancelTask(taskId, lead?._id);
+        toast.success("Task cancelled");
+    }
+  };
 
   const quickActions = [
     {
@@ -90,19 +106,19 @@ export default function LeadDetail() {
       label: "WhatsApp",
       color: "bg-status-hot text-white",
       action: () =>
-        lead && window.open(`https://wa.me/${lead.mobile.replace(/\s/g, "")}`),
+        lead && window.open(`https://wa.me/${lead.mobile?.replace(/\s/g, "")}`),
     },
     {
       icon: MapPin,
       label: "Site Visit",
       color: "bg-accent text-accent-foreground",
-      action: () => navigate(`/site-visits/new?leadId=${id}`),
+      action: () => lead && navigate(`/site-visits/new?leadId=${lead._id}`),
     },
     {
       icon: FileText,
       label: "Quote",
       color: "bg-status-cold text-white",
-      action: () => navigate(`/quotations/new?leadId=${id}`),
+      action: () => lead && navigate(`/quotations/new?leadId=${lead._id}`),
     },
   ];
 
@@ -148,18 +164,43 @@ export default function LeadDetail() {
     <AppShell showFab={false}>
       {/* Header */}
       <header className="bg-primary text-primary-foreground px-4 pt-12 pb-6">
-        <button
-          onClick={() => navigate(-1)}
-          className="touch-btn w-10 h-10 rounded-full bg-primary-foreground/20 mb-4 -ml-1"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </button>
+        <div className="flex items-center justify-between mb-4">  
+            <button
+            onClick={() => navigate(-1)}
+            className="touch-btn w-10 h-10 rounded-full bg-primary-foreground/20 -ml-1"
+            >
+            <ArrowLeft className="w-5 h-5" />
+            </button>
+            
+            { /* Edit Lead Button */ }
+            <button
+                onClick={() => navigate(`/leads/edit/${lead._id}`)}
+                className="touch-btn w-10 h-10 rounded-full bg-primary-foreground/20 -ml-1 flex items-center justify-center p-0"
+            >
+                <div className="w-5 h-5 flex items-center justify-center">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="lucide lucide-pencil"
+                    >
+                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                        <path d="m15 5 4 4" />
+                    </svg>
+                </div>
+            </button>
+        </div>
 
         <div className="flex items-start justify-between">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <h1 className="text-2xl font-bold">{lead.customerName}</h1>
-              {/* <StatusBadge status={getDisplayStatus(lead.status)} className="!bg-primary-foreground/20 !text-primary-foreground" /> */}
             </div>
             <p className="text-primary-foreground/80">{lead.mobile}</p>
             {lead.email && (
@@ -228,7 +269,7 @@ export default function LeadDetail() {
               <div className="flex-1">
                 <p className="text-xs text-muted-foreground">Lead Source</p>
                 <p className="text-sm font-medium text-foreground capitalize">
-                  {lead.leadSource.name} •{" "}
+                  {lead.leadSource?.name || "N/A"} •{" "}
                   {format(new Date(lead.createdAt), "MMM d, yyyy")}
                 </p>
               </div>
@@ -243,27 +284,31 @@ export default function LeadDetail() {
         </div>
 
         {/* Quotations */}
-        {/* {quotations && quotations.length > 0 && (
+        {quotations && quotations.length > 0 && (
           <div className="crm-card">
             <h3 className="text-sm font-semibold text-foreground mb-3">Quotations</h3>
             <div className="space-y-2">
               {quotations.map((q) => (
-                <div key={q.id} className="flex items-center justify-between p-3 bg-muted rounded-xl">
+                <div key={q._id} className="flex items-center justify-between p-3 bg-muted rounded-xl" onClick={() => {
+                        const baseUrl = "http://localhost:5000"; // Should be env but hardcoding for now
+                        window.open(baseUrl + q.pdfPath, "_blank");
+                    }}>
                   <div>
-                    <p className="text-sm font-medium">Plot {q.plots?.plot_number}</p>
-                    <p className="text-xs text-muted-foreground">{q.plots?.area_sqft} sq.ft</p>
+                    <p className="text-sm font-medium">Plot {q.plotNo}</p>
+                    <p className="text-xs text-muted-foreground">{q.area} sq.ft</p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-semibold text-primary">
-                      ₹{(Number(q.final_price) / 100000).toFixed(2)}L
+                      ₹{(Number(q.finalTotalAmount) / 100000).toFixed(2)}L
                     </p>
-                    <p className="text-[10px] text-muted-foreground uppercase">{q.status}</p>
+                    <p className="text-[10px] text-muted-foreground uppercase">{format(new Date(q.createdAt), "MMM d")}</p>
+                    <a href="#" className="text-[10px] text-green-600 font-bold underline">View PDF</a>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        )} */}
+        )}
 
   
         {/* Activity Timeline */}
@@ -273,7 +318,7 @@ export default function LeadDetail() {
               Activity Timeline
             </h3>
             <button
-              onClick={() => navigate(`/tasks/new/${lead._id}`)}
+              onClick={() => navigate(`/tasks/new?leadId=${lead._id}`)}
               className="touch-btn w-8 h-8 rounded-full bg-primary text-primary-foreground"
             >
               <Plus className="w-4 h-4" />
@@ -299,7 +344,7 @@ export default function LeadDetail() {
                         "w-3 h-3 rounded-full border-2",
                         item.completed
                           ? "bg-primary border-primary"
-                          : "bg-card border-muted-foreground",
+                          : item.cancelled ? "bg-red-500 border-red-500" : "bg-card border-muted-foreground",
                       )}
                     />
                     {index < timeline.length - 1 && (
@@ -311,24 +356,33 @@ export default function LeadDetail() {
                   <div className="flex-1 pb-4">
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="text-sm font-medium text-foreground">
+                        <p className={cn("text-sm font-medium text-foreground", item.cancelled && "line-through text-muted-foreground")}>
                           {item.title}
                         </p>
-                        {item.description && (
-                          <p className="text-xs text-muted-foreground mt-0.5">
-                            {item.description}
-                          </p>
-                        )}
+                        <p className="text-xs text-muted-foreground mt-0.5 capitalize">
+                             {item.type.replace("_", " ")}
+                        </p>
                       </div>
 
-                      {!item.completed && (
-                        <button
-                          onClick={() => navigate(`/tasks/complete/${item.id}`)}
-                          className="text-xs text-primary font-medium"
-                        >
-                          Mark Done
-                        </button>
-                      )}
+                      <div className="flex gap-2">
+                        {!item.completed && !item.cancelled && (
+                            <>
+                                <button
+                                onClick={() => navigate(`/tasks/complete/${item.id}`)}
+                                className="text-xs text-primary font-medium"
+                                >
+                                Done
+                                </button>
+                                <button
+                                onClick={() => handleCancelTask(item.id)}
+                                className="text-xs text-red-500 font-medium"
+                                >
+                                Cancel
+                                </button>
+                            </>
+                        )}
+                        {item.cancelled && <span className="text-xs text-red-500 font-medium">Cancelled</span>}
+                      </div>
                     </div>
 
                     <p className="text-xs text-muted-foreground mt-1.5 flex items-center gap-1">
