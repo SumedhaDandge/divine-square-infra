@@ -3,6 +3,7 @@ import LeadSource from "../models/LeadSource.js";
 import Project from "../models/Project.js";
 import { validateMasterExists } from "./common/masterValidation.js";
 import { validateUniqueMobile } from "./common/leadValidation.js";
+import xlsx from "xlsx"; // Requires npm install xlsx
 
 
 export const createLeadService = async (payload, userId) => {
@@ -19,6 +20,7 @@ export const createLeadService = async (payload, userId) => {
   );
 
   // 🔍 Validate Project (optional)
+  // TODO: Update validation for array `interestedProjects`
   if (payload.interestedProject) {
     await validateMasterExists(
       Project,
@@ -42,7 +44,7 @@ export const createLeadService = async (payload, userId) => {
 export const listLeadsService = async () => {
   const leads = await Lead.find()
     .populate("leadSource", "name")
-    .populate("interestedProject", "projectName")
+    .populate("interestedProjects", "projectName")
     .populate("createdBy", "name email")
     .sort({ createdAt: -1 });
 
@@ -56,7 +58,7 @@ export const listLeadsService = async () => {
 export const getLeadDetailService = async (leadId) => {
   const lead = await Lead.findById(leadId)
     .populate("leadSource", "name")
-    .populate("interestedProject", "projectName")
+    .populate("interestedProjects", "projectName")
     .populate("createdBy", "name email")
     .populate("updatedBy", "name email");
 
@@ -73,7 +75,6 @@ export const getLeadDetailService = async (leadId) => {
     data: lead,
   };
 };
-
 
 export const updateLeadService = async (leadId, payload, userId) => {
 
@@ -93,6 +94,7 @@ export const updateLeadService = async (leadId, payload, userId) => {
   }
 
   // 🔍 Validate Project
+   // TODO: Update validation for array `interestedProjects`
   if (payload.interestedProject) {
     await validateMasterExists(
       Project,
@@ -174,3 +176,94 @@ export const bulkCreateLeadsService = async (leadsData, userId) => {
       data: results
   };
 };
+
+export const importLeadsService = async (fileBuffer, userId) => {
+    if (!fileBuffer) throw new Error("File buffer is empty");
+
+    // 1. Read Excel
+    const workbook = xlsx.read(fileBuffer, { type: 'buffer' });
+    const sheetName = workbook.SheetNames[0]; // First sheet
+    const sheet = workbook.Sheets[sheetName];
+    
+    // Convert to JSON (array of objects)
+    const rows = xlsx.utils.sheet_to_json(sheet);
+    
+    const results = {
+        total: rows.length,
+        success: 0,
+        failed: 0,
+        duplicates: 0,
+        errors: []
+    };
+    
+    // 2. Resolve default Lead Source
+    let excelSource = await LeadSource.findOne({ name: "Excel Import" });
+    if (!excelSource) {
+        excelSource = await LeadSource.create({ name: "Excel Import", createdBy: userId });
+    }
+  
+    // 3. Process Rows
+    for (const [index, row] of rows.entries()) {
+        try {
+            // key normalization
+            const data = {};
+            // Make keys lowercase for easier matching: Name -> name, PHONE -> phone
+            Object.keys(row).forEach(key => {
+                data[key.trim().toLowerCase()] = row[key]; 
+            });
+  
+            // Flexible matching for Name/Phone/City
+            const name = data['name'] || data['customer name'] || data['customername'];
+            let phone = data['phone'] || data['mobile'] || data['contact'];
+            const city = data['city'] || data['location'] || data['looking location'];
+  
+            if (!name || !phone) {
+                // Skip rows without critical data
+                results.failed++;
+                results.errors.push({ row: index + 2, error: "Missing Name or Phone" });
+                continue;
+            }
+            
+            // Normalize Phone (10 digits)
+            const cleanPhone = String(phone).replace(/\D/g, '').slice(-10); 
+            if (cleanPhone.length !== 10) {
+                 results.failed++;
+                 results.errors.push({ row: index + 2, mobile: phone, error: "Invalid phone (must be 10 digits)" });
+                 continue;
+            }
+  
+            // Check duplicate
+            const existing = await Lead.findOne({ mobile: cleanPhone });
+            if (existing) {
+                results.duplicates++;
+                // dependent on business logic: skip or update. Default skip.
+                continue;
+            }
+  
+            // Create Lead with defaults
+            await Lead.create({
+                customerName: String(name).trim(),
+                mobile: cleanPhone,
+                lookingLocation: city ? String(city).trim() : undefined,
+                leadSource: excelSource._id,
+                lookingFor: "Residential", // Default
+                propertyType: "Plot", // Default
+                purpose: "Investment", // Default
+                leadStatus: "new",
+                createdBy: userId
+            });
+  
+            results.success++;
+  
+        } catch (error) {
+            results.failed++;
+            results.errors.push({ row: index + 2, error: error.message });
+        }
+    }
+  
+    return {
+      statusCode: 200,
+      message: `Import processed: ${results.success} added, ${results.duplicates} duplicates, ${results.failed} errors.`,
+      data: results
+    };
+  };

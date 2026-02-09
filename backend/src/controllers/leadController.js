@@ -4,7 +4,23 @@ import {
   getLeadDetailService,
   updateLeadService,
   bulkCreateLeadsService,
+  importLeadsService,
 } from "../services/leadService.js";
+
+export const importLeads = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: "No file uploaded" });
+        }
+        const result = await importLeadsService(req.file.buffer, req.user.id);
+        return res.status(result.statusCode).json(result);
+    } catch (error) {
+        return res.status(500).json({
+            message: "Failed to import leads",
+            error: error.message
+        });
+    }
+};
 
 export const createLead = async (req, res) => {
   try {

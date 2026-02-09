@@ -29,11 +29,11 @@ const leadSchema = new mongoose.Schema(
       required: true,
     },
 
-    // 🏗️ Interested Project (Optional)
-    interestedProject: {
+    // 🏗️ Interested Projects (Multiple)
+    interestedProjects: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
-    },
+    }],
 
     // 📍 Location preference
     lookingLocation: {
@@ -64,12 +64,7 @@ const leadSchema = new mongoose.Schema(
 
     // 💰 Budget
     budget: {
-      min: {
-        type: Number,
-      },
-      max: {
-        type: Number,
-      },
+      type: Number,
     },
 
     // 🌍 Belongs from

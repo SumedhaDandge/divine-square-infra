@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { z } from "zod";
-import { format } from "date-fns";
+import { format, parse, isValid } from "date-fns";
 import {
   Phone,
-  MessageCircle,
-  MapPin,
-  Bell,
+  MessageSquare,
+  CalendarCheck,
+  Repeat,
+  PhoneForwarded,
+  CheckCircle,
   ArrowLeft,
-  ChevronDown,
   Calendar as CalendarIcon,
   Clock,
 } from "lucide-react";
@@ -48,38 +49,14 @@ const taskSchema = z.object({
 
 const taskTypes = [
   { value: "call", label: "Call", icon: Phone },
-  { value: "whatsapp", label: "WhatsApp", icon: MessageCircle },
-  { value: "site_visit", label: "Site Visit", icon: MapPin },
-  { value: "revisit", label: "Re-Visit", icon: Bell },
-  { value: "follow_up", label: "Follow-up", icon: Bell },
-  { value: "booking", label: "Booking", icon: MapPin },
+  { value: "whatsapp", label: "WhatsApp", icon: MessageSquare },
+  { value: "site_visit", label: "Site Visit", icon: CalendarCheck },
+  { value: "revisit", label: "Re-Visit", icon: Repeat },
+  { value: "follow_up", label: "Follow-up", icon: PhoneForwarded },
+  { value: "booking", label: "Booking", icon: CheckCircle },
 ];
 
 /* ------------------ TIME SLOTS ------------------ */
-
-const timeSlots = [
-  "09:00 AM",
-  "09:30 AM",
-  "10:00 AM",
-  "10:30 AM",
-  "11:00 AM",
-  "11:30 AM",
-  "12:00 PM",
-  "12:30 PM",
-  "01:00 PM",
-  "01:30 PM",
-  "02:00 PM",
-  "02:30 PM",
-  "03:00 PM",
-  "03:30 PM",
-  "04:00 PM",
-  "04:30 PM",
-  "05:00 PM",
-  "05:30 PM",
-  "06:00 PM",
-  "06:30 PM",
-  "07:00 PM",
-];
 
 /* ------------------ COMPONENT ------------------ */
 
@@ -270,29 +247,39 @@ console.log("userID", userId?.id); // or user.id depending on your structure
               </PopoverContent>
             </Popover>
 
-            <Popover>
-              <PopoverTrigger asChild>
-                <button
+            {/* NATIVE TIME PICKER */}
+            <div className="relative">
+                 <button
                   type="button"
-                  className="w-32 h-12 bg-muted rounded-xl px-3"
-                >
-                  <Clock className="inline mr-1" />
+                  className="w-32 h-12 bg-muted rounded-xl px-3 flex items-center"
+                 >
+                  <Clock className="inline mr-2 w-5 h-5" />
                   {formData.due_time || "Time"}
-                </button>
-              </PopoverTrigger>
-              <PopoverContent>
-                {timeSlots.map((t) => (
-                  <button
-                    key={t}
-                    type="button"
-                    onClick={() => setFormData({ ...formData, due_time: t })}
-                    className="block w-full text-left px-3 py-2 hover:bg-muted"
-                  >
-                    {t}
-                  </button>
-                ))}
-              </PopoverContent>
-            </Popover>
+                 </button>
+                 
+                 <input 
+                    type="time"
+                    className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer"
+                    value={(() => {
+                        if (!formData.due_time) return "";
+                        const parsed = parse(formData.due_time, "hh:mm a", new Date());
+                        return isValid(parsed) ? format(parsed, "HH:mm") : "";
+                    })()}
+                    onChange={(e) => {
+                        const val = e.target.value; // HH:mm
+                        if(!val) return;
+                        
+                        // Convert to 12h format
+                        const [h, m] = val.split(':');
+                        const date = new Date();
+                        date.setHours(Number(h));
+                        date.setMinutes(Number(m));
+                        
+                        const timeStr = format(date, "hh:mm a");
+                        setFormData({ ...formData, due_time: timeStr });
+                    }}
+                 />
+            </div>
           </div>
         </div>
 

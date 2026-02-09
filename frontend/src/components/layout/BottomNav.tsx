@@ -1,12 +1,10 @@
-import { Home, Users, Building2, BarChart3, User, MessageSquare } from "lucide-react";
+import { Home, Users, Building2, User } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 
 const navItems = [
   { icon: Home, label: "Home", path: "/dashboard" },
   { icon: Users, label: "Leads", path: "/leads" },
-  { icon: MessageSquare, label: "Inquiries", path: "/inquiries" },
   { icon: Building2, label: "Projects", path: "/projects" },
-  { icon: BarChart3, label: "Reports", path: "/reports" },
   { icon: User, label: "Profile", path: "/profile" },
 ];
 

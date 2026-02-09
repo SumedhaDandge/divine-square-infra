@@ -51,12 +51,40 @@ const leadTaskSchema = new mongoose.Schema({
     default: "pending",
   },
 
+  // 📝 SITE VISIT FEEDBACK
+  feedback: {
+    rating: { type: Number, min: 1, max: 5 },
+    interestLevel: { 
+      type: String, 
+      enum: ["very_interested", "interested", "neutral", "not_interested"] 
+    },
+    notes: String,
+    images: [String], // URLs
+    layoutsVisited: [String], // IDs or Names of layouts
+    attendeeCount: Number,
+    revisitDate: Date,
+    objections: [String],
+  },
+
   // 🔔 REMINDER TRACKING
   remindersSent: {
     min15: { type: Boolean, default: false },
     min10: { type: Boolean, default: false },
     min5: { type: Boolean, default: false }
   },
+
+  // 🏟️ SITE VISIT SPECIFIC
+  project: { type: mongoose.Schema.Types.ObjectId, ref: "Project" }, // Optional link to project
+  pickupLocation: String,
+
+  // 🔄 RESCHEDULE HISTORY
+  rescheduleHistory: [{
+    scheduledAt: Date,
+    taskTime: String,
+    reason: String,
+    rescheduledBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    rescheduledAt: { type: Date, default: Date.now }
+  }],
 
   completedAt: Date,
 

@@ -12,7 +12,7 @@ export const useMaster = () => {
       try {
         const response = await divineSquareService.listAmmeneities();
         if (response.status === 200) {
-        setAmmeneities(response.data.data);
+        setAmmeneities(response?.data);
         } else {
             toast.error("Failed to fetch ammenities.");
         }
@@ -26,7 +26,7 @@ export const useMaster = () => {
        try {
         const response = await divineSquareService.listNearByDevelopments();
         if (response.status === 200) {
-        setNearbyDevelopments(response?.data?.data);
+        setNearbyDevelopments(response?.data);
         } else {
           toast.error("Failed to fetch nearby developments.");
         }
@@ -40,7 +40,7 @@ export const useMaster = () => {
     try {
       const response = await divineSquareService.listLeadSources();
       if (response.status === 200) {
-        setLeadSources(response?.data?.data);
+        setLeadSources(response?.data);
       } else {
         toast.error("Failed to fetch lead sources.");
       }

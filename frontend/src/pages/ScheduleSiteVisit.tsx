@@ -41,6 +41,15 @@ export default function ScheduleSiteVisit() {
     fetchLeads();
     fetchProjects();
   }, []);
+
+  useEffect(() => {
+    if (leadIdParam && leads?.length) {
+       const exists = leads.find(l => l.id === leadIdParam || l._id === leadIdParam);
+       if (exists) {
+         setFormData(prev => ({ ...prev, lead_id: exists.id || exists._id }));
+       }
+    }
+  }, [leadIdParam, leads]);
   
   const [formData, setFormData] = useState({
     lead_id: leadIdParam || "",
@@ -73,10 +82,13 @@ export default function ScheduleSiteVisit() {
 
     if (!formData.scheduled_date) return;
 
+    const selectedProject = projects?.find(p => p.id === formData.project_id);
+
     try {
       await createSiteVisit.mutateAsync({
         lead_id: formData.lead_id,
         project_id: formData.project_id,
+        projectName: selectedProject?.name,
         scheduled_date: formData.scheduled_date.toISOString(),
         scheduled_time: formData.scheduled_time,
         pickup_location: formData.pickup_location || undefined,
@@ -89,8 +101,8 @@ export default function ScheduleSiteVisit() {
     }
   };
 
-  const selectedLead = leads?.find((l) => l.id === formData.lead_id);
-  const selectedProject = projects?.find((p) => p.id === formData.project_id);
+  const selectedLead = leads?.find((l) => l.id === formData.lead_id || l._id === formData.lead_id);
+  const selectedProject = projects?.find((p) => p.id === formData.project_id || p._id === formData.project_id);
 
   return (
     <AppShell showFab={false} showBottomNav={false}>
@@ -121,7 +133,7 @@ export default function ScheduleSiteVisit() {
               className="w-full h-12 px-4 rounded-xl bg-muted text-left text-foreground flex items-center justify-between"
             >
               {selectedLead ? (
-                <span>{selectedLead.name} - {selectedLead.phone}</span>
+                <span>{selectedLead.customerName} - {selectedLead.mobile}</span>
               ) : (
                 <span className="text-muted-foreground">Select a lead</span>
               )}
@@ -129,21 +141,21 @@ export default function ScheduleSiteVisit() {
             </button>
             {showLeadDropdown && (
               <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-xl shadow-lg z-10 overflow-hidden max-h-48 overflow-y-auto">
-                {leads?.map((lead) => (
-                  <button
-                    key={lead.id}
-                    type="button"
-                    onClick={() => {
-                      setFormData({ ...formData, lead_id: lead.id });
-                      setShowLeadDropdown(false);
-                    }}
+                  {leads?.map((lead) => (
+                    <button
+                      key={lead.id || lead._id}
+                      type="button"
+                      onClick={() => {
+                        setFormData({ ...formData, lead_id: lead.id || lead._id });
+                        setShowLeadDropdown(false);
+                      }}
                     className={cn(
                       "w-full px-4 py-3 text-left text-sm hover:bg-muted transition-colors",
-                      formData.lead_id === lead.id && "bg-primary/10 text-primary"
+                      formData.lead_id === (lead.id || lead._id) && "bg-primary/10 text-primary"
                     )}
                   >
-                    <p className="font-medium">{lead.name}</p>
-                    <p className="text-xs text-muted-foreground">{lead.phone}</p>
+                    <p className="font-medium">{lead.customerName}</p>
+                    <p className="text-xs text-muted-foreground">{lead.mobile}</p>
                   </button>
                 ))}
               </div>
@@ -167,7 +179,7 @@ export default function ScheduleSiteVisit() {
               className="w-full h-12 px-4 rounded-xl bg-muted text-left text-foreground flex items-center justify-between"
             >
               {selectedProject ? (
-                <span>{selectedProject.name} - {selectedProject.location}</span>
+                <span>{selectedProject.projectName || selectedProject.name}</span>
               ) : (
                 <span className="text-muted-foreground">Select a project</span>
               )}
@@ -177,10 +189,10 @@ export default function ScheduleSiteVisit() {
               <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-xl shadow-lg z-10 overflow-hidden max-h-48 overflow-y-auto">
                 {projects?.map((project) => (
                   <button
-                    key={project.id}
+                    key={project.id || project._id}
                     type="button"
                     onClick={() => {
-                      setFormData({ ...formData, project_id: project.id });
+                      setFormData({ ...formData, project_id: project.id || project._id });
                       setShowProjectDropdown(false);
                     }}
                     className={cn(
@@ -188,7 +200,7 @@ export default function ScheduleSiteVisit() {
                       formData.project_id === project.id && "bg-primary/10 text-primary"
                     )}
                   >
-                    <p className="font-medium">{project.name}</p>
+                    <p className="font-medium">{project.projectName || project.name}</p>
                     <p className="text-xs text-muted-foreground">{project.location}</p>
                   </button>
                 ))}
@@ -233,32 +245,15 @@ export default function ScheduleSiteVisit() {
               </PopoverContent>
             </Popover>
 
-            <Popover>
-              <PopoverTrigger asChild>
-                <button
-                  type="button"
-                  className="w-32 h-12 px-4 rounded-xl bg-muted text-left flex items-center gap-2"
-                >
-                  <Clock className="w-5 h-5 text-muted-foreground" />
-                  {formData.scheduled_time || <span className="text-muted-foreground">Time</span>}
-                </button>
-              </PopoverTrigger>
-              <PopoverContent className="w-40 p-2 max-h-48 overflow-y-auto" align="end">
-                {timeSlots.map((time) => (
-                  <button
-                    key={time}
-                    type="button"
-                    onClick={() => setFormData({ ...formData, scheduled_time: time })}
-                    className={cn(
-                      "w-full px-3 py-2 text-left text-sm rounded-lg hover:bg-muted transition-colors",
-                      formData.scheduled_time === time && "bg-primary/10 text-primary"
-                    )}
-                  >
-                    {time}
-                  </button>
-                ))}
-              </PopoverContent>
-            </Popover>
+            <div className="relative w-32">
+              <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+              <input
+                type="time"
+                value={formData.scheduled_time}
+                onChange={(e) => setFormData({ ...formData, scheduled_time: e.target.value })}
+                className="w-full h-12 pl-10 pr-2 rounded-xl bg-muted text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 [color-scheme:light] dark:[color-scheme:dark]"
+              />
+            </div>
           </div>
           {(errors.scheduled_date || errors.scheduled_time) && (
             <p className="text-destructive text-xs mt-1">{errors.scheduled_date || errors.scheduled_time}</p>

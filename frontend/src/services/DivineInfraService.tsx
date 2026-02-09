@@ -47,6 +47,10 @@ class DivineSquareService {
     return divineSquareApi.bulkCreateLeads(data);
   }
 
+  uploadLeadExcel(data: FormData): Promise<any> {
+    return divineSquareApi.uploadLeadExcel(data);
+  }
+
   getLead(leadId: string): Promise<any> {
     return divineSquareApi.getLead(leadId);
   }
@@ -62,8 +66,8 @@ class DivineSquareService {
     return divineSquareApi.listLeadTasksById( leadId);
   }
 
-  listAllTasks(): Promise<any> {
-      return divineSquareApi.listAllTasks();
+  listAllTasks(query?: any): Promise<any> {
+      return divineSquareApi.listAllTasks(query);
   }
 
   updateLeadTask(taskId: string, data: any): Promise<any> {
@@ -101,13 +105,18 @@ class DivineSquareService {
       return divineSquareApi.createQuotation(data);
   }
 
-  listQuotations(leadId: string): Promise<any> {
+  listQuotations(leadId?: string): Promise<any> {
       return divineSquareApi.listQuotations(leadId);
   }
 
   // Task Actions
   cancelTask(taskId: string): Promise<any> {
       return divineSquareApi.cancelTask(taskId);
+  }
+
+  // Upload
+  uploadMedia(data: FormData): Promise<any> {
+      return divineSquareApi.uploadMedia(data);
   }
 }
 

@@ -2,7 +2,10 @@ import {
   createNearbyDevelopmentService,
   createAmenityService,
   listNearbyDevelopmentsService,
-  listAmenitiesService, listLeadSourcesService  , createLeadSourceService
+  listAmenitiesService, listLeadSourcesService  , createLeadSourceService,
+  updateNearbyDevelopmentService,
+  updateAmenityService,
+  updateLeadSourceService
 } from "../services/masterService.js";
 
 import { successResponse, errorResponse } from "../utils/response.js";
@@ -68,6 +71,36 @@ export const createLeadSource = async (req, res) => {
 
 
 
+
+// UPDATE NEARBY DEVELOPMENT
+export const updateNearbyDevelopment = async (req, res) => {
+  try {
+    const data = await updateNearbyDevelopmentService(req.params.id, req.body);
+    return successResponse(res, 200, "Nearby development updated successfully", data);
+  } catch (error) {
+    return errorResponse(res, 500, error.message);
+  }
+};
+
+// UPDATE AMENITY
+export const updateAmenity = async (req, res) => {
+  try {
+    const data = await updateAmenityService(req.params.id, req.body);
+    return successResponse(res, 200, "Amenity updated successfully", data);
+  } catch (error) {
+    return errorResponse(res, 500, error.message);
+  }
+};
+
+// UPDATE LEAD SOURCE
+export const updateLeadSource = async (req, res) => {
+  try {
+    const data = await updateLeadSourceService(req.params.id, req.body);
+    return successResponse(res, 200, "Lead source updated successfully", data);
+  } catch (error) {
+    return errorResponse(res, 500, error.message);
+  }
+};
 
 // LIST NEARBY DEVELOPMENTS
 export const listNearbyDevelopments = async (req, res) => {

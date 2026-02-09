@@ -14,6 +14,7 @@ class DivineSquareApi {
     INQUIRIES: "/inquiries",
     USERS: "/users",
     QUOTATIONS: "/quotations",
+    UPLOAD: "/upload/s3",
   };
 
   Login(data: any): Promise<any> {
@@ -50,6 +51,30 @@ class DivineSquareApi {
     return api._get(this._urlMapping.LEAD_SOURCES);
   }
 
+  createAmenity(data: any): Promise<any> {
+    return api._post(this._urlMapping.AMMENITIES, data);
+  }
+
+  updateAmenity(id: string, data: any): Promise<any> {
+    return api._put(`${this._urlMapping.AMMENITIES}/${id}`, data);
+  }
+
+  createNearbyDevelopment(data: any): Promise<any> {
+    return api._post(this._urlMapping.NEARBY_DEVELOPMENTS, data);
+  }
+
+  updateNearbyDevelopment(id: string, data: any): Promise<any> {
+    return api._put(`${this._urlMapping.NEARBY_DEVELOPMENTS}/${id}`, data);
+  }
+
+  createLeadSource(data: any): Promise<any> {
+    return api._post(this._urlMapping.LEAD_SOURCES, data);
+  }
+
+  updateLeadSource(id: string, data: any): Promise<any> {
+    return api._put(`${this._urlMapping.LEAD_SOURCES}/${id}`, data);
+  }
+
   listLeads(): Promise<any> {
     return api._get(this._urlMapping.LEADS);
   }
@@ -60,6 +85,10 @@ class DivineSquareApi {
 
   bulkCreateLeads(data: any): Promise<any> {
       return api._post(`${this._urlMapping.LEADS}/bulk`, data);
+  }
+
+  uploadLeadExcel(data: FormData): Promise<any> {
+      return api._postFormData(`${this._urlMapping.LEADS}/import`, data);
   }
 
   getLead(leadId: string): Promise<any> {
@@ -74,8 +103,13 @@ class DivineSquareApi {
     return api._get(`${this._urlMapping.LEAD_TASKS}/${leadId}`);
   }
 
-  listAllTasks(): Promise<any> {
-      return api._get(this._urlMapping.LEAD_TASKS);
+  listAllTasks(query?: any): Promise<any> {
+      let url = this._urlMapping.LEAD_TASKS;
+      if (query) {
+        const params = new URLSearchParams(query);
+        url += `?${params.toString()}`;
+      }
+      return api._get(url);
   }
 
   listLeadTasksById(leadId: string): Promise<any> {
@@ -121,13 +155,20 @@ class DivineSquareApi {
       return api._post(this._urlMapping.QUOTATIONS, data);
   }
 
-  listQuotations(leadId: string): Promise<any> {
-      return api._get(`${this._urlMapping.QUOTATIONS}/${leadId}`);
+  listQuotations(leadId?: string): Promise<any> {
+      const url = leadId 
+        ? `${this._urlMapping.QUOTATIONS}/${leadId}` 
+        : this._urlMapping.QUOTATIONS;
+      return api._get(url);
   }
 
   // Task Actions
   cancelTask(taskId: string): Promise<any> {
       return api._patch(`${this._urlMapping.LEAD_TASKS}/cancel/${taskId}`, {});
+  }
+
+  uploadMedia(data: FormData): Promise<any> {
+      return api._postFormData(this._urlMapping.UPLOAD, data);
   }
 }
 

@@ -7,6 +7,9 @@ import {
   listNearbyDevelopments,
   listAmenities,listLeadSources,
   createLeadSource,
+  updateNearbyDevelopment,
+  updateAmenity,
+  updateLeadSource,
 } from "../controllers/masterController.js";
 
 
@@ -31,6 +34,29 @@ router.post(
   authenticateToken,
   authorizeRoles("admin"),
   createLeadSource
+);
+
+
+// UPDATE (Admin)
+router.put(
+  "/nearby-development/:id",
+  authenticateToken,
+  authorizeRoles("admin"),
+  updateNearbyDevelopment
+);
+
+router.put(
+  "/amenity/:id",
+  authenticateToken,
+  authorizeRoles("admin"),
+  updateAmenity
+);
+
+router.put(
+  "/lead-source/:id",
+  authenticateToken,
+  authorizeRoles("admin"),
+  updateLeadSource
 );
 
 // LIST (Dropdown usage)

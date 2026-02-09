@@ -42,10 +42,25 @@ export function useLeadQuotations(leadId: string) {
     queryFn: async () => {
       if (!leadId) return [];
       const response = await divineSquareService.listQuotations(leadId);
-      // Assuming response.data is the array
-      return response as Quotation[];
+      if (response.status === 200 || response.statusCode === 200) {
+          return response.data as Quotation[];
+      }
+      return [];
     },
     enabled: !!leadId,
+  });
+}
+
+export function useAllQuotations() {
+  return useQuery({
+    queryKey: ["quotations", "all"],
+    queryFn: async () => {
+      const response = await divineSquareService.listQuotations(); 
+      if (response.status === 200 || response.statusCode === 200) {
+           return response.data as Quotation[];
+      }
+      return [];
+    },
   });
 }
 

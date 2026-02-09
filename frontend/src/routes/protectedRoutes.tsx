@@ -21,12 +21,22 @@ import AddUser from "@/pages/AddUser";
 import Notifications from "@/pages/Notifications";
 import Privacy from "@/pages/Privacy";
 import Help from "@/pages/Help";
+import Quotations from "@/pages/Quotations";
+import SiteVisitFeedback from "@/pages/SiteVisitFeedback";
+import RescheduleSiteVisit from "@/pages/RescheduleSiteVisit";
+
+import Masters from "@/pages/Masters";
 
 export const protectedRoutes = [
   {
     path: "/dashboard",
     element: <Dashboard />,
   },
+  {
+      path: "/masters",
+      element: <Masters />,
+  },
+
   {
     path: "/leads",
     element: <Leads />,
@@ -105,4 +115,16 @@ export const protectedRoutes = [
       // element: <CreateQuotation />, // need import
       element: <CreateQuotation />,
   },
+  {
+      path: "/quotations",
+      element: <Quotations />,
+  },
+  {
+      path: "/site-visits/feedback/:id",
+      element: <SiteVisitFeedback />,
+  },
+  {
+      path: "/site-visits/reschedule/:id",
+      element: <RescheduleSiteVisit />,
+  }
 ];

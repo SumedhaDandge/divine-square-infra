@@ -1,4 +1,4 @@
-import { createLeadTaskService ,listLeadTasksService , listAllTasksService } from "../services/leadTaskService.js";
+import { createLeadTaskService ,listLeadTasksService , listAllTasksService, updateLeadTaskService } from "../services/leadTaskService.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 import User from "../models/User.js"
 import { sendFcmNotification } from "../utils/sendFcm.js";
@@ -105,3 +105,12 @@ export const cancelTask = async (req, res) => {
       return errorResponse(res, 500, error.message);
     }
   };
+
+export const updateLeadTask = async (req, res) => {
+    try {
+        const result = await updateLeadTaskService(req.params.taskId, req.body, req.user._id || req.user.id);
+        return successResponse(res, 200, "Task updated", result);
+    } catch (error) {
+        return errorResponse(res, 500, error.message);
+    }
+};

@@ -130,9 +130,14 @@ export default function BookSiteVisitPage() {
                                     required 
                                     type="tel" 
                                     value={formData.mobile}
-                                    onChange={(e) => setFormData({...formData, mobile: e.target.value})}
+                                    onChange={(e) => {
+                                      const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                                      setFormData({...formData, mobile: val});
+                                    }}
+                                    pattern="[0-9]{10}"
+                                    title="Please enter a valid 10-digit mobile number"
                                     className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none font-medium" 
-                                    placeholder="+91 98765..." 
+                                    placeholder="Enter 10-digit mobile number" 
                                  />
                              </div>
                          </div>

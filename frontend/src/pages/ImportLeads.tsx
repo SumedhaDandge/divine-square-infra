@@ -35,45 +35,17 @@ export default function ImportLeads() {
         setIsLoading(true);
         
         try {
-             // Parse full file again to ensure we have all data
-            const reader = new FileReader();
-            reader.onload = async (evt) => {
-                const bstr = evt.target?.result;
-                const wb = XLSX.read(bstr, { type: "binary" });
-                const wsname = wb.SheetNames[0];
-                const ws = wb.Sheets[wsname];
-                
-                // Expected columns: Customer Name, Mobile, Email, Project Name (optional), Interest...
-                // Our backend expects: customerName, mobile, email, etc.
-                // We need to map or expect standard headers.
-                const jsonData = XLSX.utils.sheet_to_json(ws);
-                
-                // Basic mapping if headers don't match exactly?
-                // For now, assume headers match our Schema or we map them.
-                // Let's do a simple map assuming common headers
-                const mappedData = jsonData.map((row: any) => ({
-                    customerName: row["Customer Name"] || row["Name"] || row["customerName"],
-                    mobile: String(row["Mobile"] || row["Phone"] || row["mobile"]),
-                    email: row["Email"] || row["email"],
-                    leadSource: row["Source"] || row["leadSource"], // Will be resolved by backend or default
-                    lookingLocation: row["Location"] || row["lookingLocation"],
-                    budget: { 
-                        min: row["Min Budget"], 
-                        max: row["Max Budget"] 
-                    },
-                    lookingFor: "Residential", // Default
-                    propertyType: "Plot", // Default
-                    purpose: "Investment", // Default
-                }));
+             // Use Backend API for upload
+            const formData = new FormData();
+            formData.append("file", file);
 
-                const res = await divineSquareService.bulkCreateLeads(mappedData);
-                if(res.status === 200) {
-                    setUploadResults(res.data);
-                    toast.success(`Processed! Success: ${res.data.success}, Failed: ${res.data.failed}`);
-                }
-                setIsLoading(false);
-            };
-            reader.readAsBinaryString(file);
+            const res = await divineSquareService.uploadLeadExcel(formData);
+
+            if(res.status === 200) {
+                setUploadResults(res.data);
+                toast.success(res.message || "Import completed");
+            }
+            setIsLoading(false);
             
         } catch(error) {
             console.error(error);

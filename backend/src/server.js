@@ -16,6 +16,7 @@ import leadRoutes from "./routes/leadRoutes.js";
 import leadTaskRoutes from "./routes/leadTaskRoutes.js";
 import inquiryRoutes from "./routes/inquiryRoutes.js";
 import quotationRoutes from "./routes/quotationRoutes.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
 
 import { startTaskScheduler } from "./jobs/taskScheduler.js";
 
@@ -65,6 +66,7 @@ app.use("/api/leads", leadRoutes);
 app.use("/api/lead-tasks", leadTaskRoutes);
 app.use("/api/inquiries", inquiryRoutes);
 app.use("/api/quotations", quotationRoutes);
+app.use("/api/upload", uploadRoutes);
 
 
 // Create a default admin user if none exists

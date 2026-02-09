@@ -65,34 +65,48 @@ export const createLeadSourceService = async (payload, userId) => {
 // LIST SERVICES
 
 export const listNearbyDevelopmentsService = async () => {
-  const data = await NearbyDevelopment.find({ status: "active" }).sort({
+  return await NearbyDevelopment.find({ status: "active" }).sort({
     name: 1
   });
-
-  return {
-    statusCode: 200,
-    data
-  };
 };
 
 export const listAmenitiesService = async () => {
-  const data = await Amenity.find({ status: "active" }).sort({
+  return await Amenity.find({ status: "active" }).sort({
     name: 1
   });
+};
 
+
+
+export const listLeadSourcesService = async () => {
+  return await LeadSource.find({ status: "active" }).sort({
+    name: 1
+  });
+};
+
+export const updateNearbyDevelopmentService = async (id, payload) => {
+  const data = await NearbyDevelopment.findByIdAndUpdate(id, payload, { new: true });
   return {
     statusCode: 200,
+    message: "Nearby development updated",
     data
   };
 };
 
-
-export const listLeadSourcesService = async () => {
-  const data = await LeadSource.find({ status: "active" }).sort({
-    name: 1
-  });
+export const updateAmenityService = async (id, payload) => {
+  const data = await Amenity.findByIdAndUpdate(id, payload, { new: true });
   return {
     statusCode: 200,
+    message: "Amenity updated",
     data
   };
-}
+};
+
+export const updateLeadSourceService = async (id, payload) => {
+  const data = await LeadSource.findByIdAndUpdate(id, payload, { new: true });
+  return {
+    statusCode: 200,
+    message: "Lead source updated",
+    data
+  };
+};

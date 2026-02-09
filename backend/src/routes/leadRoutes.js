@@ -5,10 +5,12 @@ import {
   getLeadDetails,
   updateLead,
   bulkCreateLeads,
+  importLeads,
 } from "../controllers/leadController.js";
 
 import authenticateToken from "../middleware/authMiddleware.js";
 import { authorizeRoles } from "../middleware/roleMiddleware.js";
+import upload from "../middleware/uploadMiddleware.js";
 import {
   createLeadValidator,
   updateLeadValidator,
@@ -16,6 +18,14 @@ import {
 import { validate } from "../middleware/validate.js";
 
 const router = express.Router();
+
+router.post(
+  "/import",
+  authenticateToken,
+  authorizeRoles("admin", "sales"),
+  upload.single("file"), // Expecting form-data field 'file'
+  importLeads
+);
 
 router.post(
   "/bulk",
