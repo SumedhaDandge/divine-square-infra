@@ -201,6 +201,7 @@ console.log("userID", userId?.id); // or user.id depending on your structure
               ))}
             </div>
           )}
+          {errors.lead_id && <p className="text-xs text-red-500 mt-1">Please select a lead</p>}
         </div>
 
         {/* REMARK */}
@@ -213,6 +214,7 @@ console.log("userID", userId?.id); // or user.id depending on your structure
             }
             className="w-full bg-muted rounded-xl p-3"
           />
+          {errors.remark && <p className="text-xs text-red-500 mt-1">{errors.remark}</p>}
         </div>
 
         {/* DATE & TIME */}
@@ -249,21 +251,18 @@ console.log("userID", userId?.id); // or user.id depending on your structure
 
             {/* NATIVE TIME PICKER */}
             <div className="relative">
-                 <button
-                  type="button"
-                  className="w-32 h-12 bg-muted rounded-xl px-3 flex items-center"
-                 >
-                  <Clock className="inline mr-2 w-5 h-5" />
-                  {formData.due_time || "Time"}
-                 </button>
-                 
                  <input 
                     type="time"
-                    className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer"
+                    className={cn(
+                        "w-full h-12 bg-muted rounded-xl px-4 text-sm font-medium",
+                        errors.due_time ? "border border-red-500 bg-red-50" : ""
+                    )}
                     value={(() => {
                         if (!formData.due_time) return "";
-                        const parsed = parse(formData.due_time, "hh:mm a", new Date());
-                        return isValid(parsed) ? format(parsed, "HH:mm") : "";
+                        try {
+                             const parsed = parse(formData.due_time, "hh:mm a", new Date());
+                             return isValid(parsed) ? format(parsed, "HH:mm") : "";
+                        } catch (e) { return ""; }
                     })()}
                     onChange={(e) => {
                         const val = e.target.value; // HH:mm
@@ -275,12 +274,15 @@ console.log("userID", userId?.id); // or user.id depending on your structure
                         date.setHours(Number(h));
                         date.setMinutes(Number(m));
                         
+                        // Use hh:mm a format consistently
                         const timeStr = format(date, "hh:mm a");
                         setFormData({ ...formData, due_time: timeStr });
                     }}
                  />
             </div>
           </div>
+          {errors.due_date && <p className="text-xs text-red-500 mt-1">Date is required</p>}
+          {errors.due_time && <p className="text-xs text-red-500 mt-1">Time is required</p>}
         </div>
 
         {/* SUBMIT */}

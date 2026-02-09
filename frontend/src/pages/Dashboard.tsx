@@ -3,7 +3,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { TaskCard } from "@/components/dashboard/TaskCard";
 import { PipelineBar } from "@/components/dashboard/PipelineBar";
-import { Users, PhoneCall, MapPin, TrendingUp, Calendar, AlertCircle, Loader2 } from "lucide-react";
+import { Users, PhoneCall, MapPin, TrendingUp, Calendar, AlertCircle, Loader2, Bell } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import useLeads from "@/hooks/useLeads";
 import { useLeadTasks } from "@/hooks/useLeadTasks";
@@ -97,9 +97,10 @@ export default function Dashboard() {
         </div>
         <button 
            onClick={() => navigate("/settings/notifications")}
-           className="w-10 h-10 rounded-full bg-primary-foreground/20 flex items-center justify-center transition-opacity hover:opacity-90"
+           className="w-10 h-10 rounded-full bg-primary-foreground/20 flex items-center justify-center transition-opacity hover:opacity-90 relative"
         >
-             <AlertCircle className="w-6 h-6 text-primary-foreground" />
+             <Bell className="w-6 h-6 text-primary-foreground" />
+             <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-primary animate-pulse" />
         </button>
       </header>
 

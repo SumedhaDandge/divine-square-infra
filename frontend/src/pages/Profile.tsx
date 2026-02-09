@@ -10,9 +10,7 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 
 const menuItems = [
-  { icon: Bell, label: "Notifications", path: "/settings/notifications" },
-  { icon: Shield, label: "Privacy & Security", path: "/settings/privacy" },
-  { icon: HelpCircle, label: "Help & Support", path: "/settings/help" },
+  { icon: Bell, label: "Notification", path: "/settings/notifications" },
 ];
 
 export default function Profile() {
