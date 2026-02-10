@@ -1,6 +1,6 @@
-import { Phone, MessageCircle, MapPin, Calendar, ChevronRight } from "lucide-react";
-// import { StatusBadge, LeadStatus } from "@/components/ui/StatusBadge";
+import { Phone, MessageCircle, MapPin, Calendar, ChevronRight, User, Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 interface LeadCardProps {
   id: string;
@@ -30,77 +30,52 @@ export function LeadCard({
   onCall,
   onWhatsApp,
 }: LeadCardProps) {
-
-
-  console.log("Rendering LeadCard for:", name);
+  
   return (
-    <div className="crm-card animate-slide-up">
-      {/* Header */}
-      <div className="flex items-start justify-between mb-3" onClick={onClick}>
+    <div className="bg-card rounded-xl p-3 border border-border/60 shadow-sm hover:shadow-md transition-all">
+      <div className="flex justify-between items-start gap-3" onClick={onClick}>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-semibold text-foreground truncate">{name}</h3>
-            {/* <StatusBadge status={status} /> */}
+          <div className="flex items-center gap-2 mb-0.5">
+            <h3 className="font-semibold text-sm text-foreground truncate">{name}</h3>
+            <StatusBadge status={status} className="h-5 text-[10px] px-1.5 py-0" />
           </div>
-          <p className="text-sm text-muted-foreground">{phone}</p>
+          <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2">
+             <span className="flex items-center gap-1">
+                <Phone className="w-3 h-3" /> {phone}
+             </span>
+             {budget && (
+                <span className="flex items-center gap-1">
+                   <Wallet className="w-3 h-3" /> ₹{budget}
+                </span>
+             )}
+          </div>
+          
+          {project && (
+            <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-muted/50 text-[10px] font-medium text-foreground/80 mb-3">
+               <MapPin className="w-3 h-3 text-primary" />
+               {project}
+            </div>
+          )}
         </div>
-        <button className="touch-btn w-8 h-8 rounded-full hover:bg-muted transition-colors -mr-2">
-          <ChevronRight className="w-5 h-5 text-muted-foreground" />
-        </button>
+        
+        {/* <button className="text-muted-foreground/50">
+           <ChevronRight className="w-4 h-4" />
+        </button> */}
       </div>
 
-      {/* Details */}
-      <div className="grid grid-cols-2 gap-2 text-xs mb-3">
-        <div className="flex items-center gap-1.5 text-muted-foreground">
-          <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-          Source: <span className="text-foreground font-medium">{source}</span>
-        </div>
-        {project && (
-          <div className="flex items-center gap-1.5 text-muted-foreground">
-            <MapPin className="w-3 h-3" />
-            <span className="text-foreground font-medium truncate">{project}</span>
-          </div>
-        )}
-        {budget && (
-          <div className="flex items-center gap-1.5 text-muted-foreground">
-            <span className="text-foreground font-medium">₹{budget}</span>
-          </div>
-        )}
-        {nextFollowUp && (
-          <div className="flex items-center gap-1.5 text-muted-foreground">
-            <Calendar className="w-3 h-3" />
-            <span className={cn(
-              "font-medium",
-              nextFollowUp.includes("Today") ? "text-status-hot" : "text-foreground"
-            )}>
-              {nextFollowUp}
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* Quick Actions */}
-      <div className="flex gap-2 pt-3 border-t border-border">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onCall?.();
-          }}
-          className="flex-1 touch-btn bg-primary text-primary-foreground rounded-xl text-sm font-semibold gap-2 hover:bg-primary-hover transition-colors"
-        >
-          <Phone className="w-4 h-4" />
-          Call
-        </button>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onWhatsApp?.();
-          }}
-          className="flex-1 touch-btn bg-status-hot text-white rounded-xl text-sm font-semibold gap-2 hover:opacity-90 transition-opacity"
-        >
-          <MessageCircle className="w-4 h-4" />
-          WhatsApp
-        </button>
+      <div className="grid grid-cols-2 gap-2 mt-1">
+         <button
+           onClick={(e) => { e.stopPropagation(); onCall?.(); }}
+           className="flex items-center justify-center gap-1.5 h-8 rounded-lg bg-primary/10 text-primary text-xs font-medium hover:bg-primary hover:text-primary-foreground transition-colors"
+         >
+           <Phone className="w-3.5 h-3.5" /> Call
+         </button>
+         <button
+           onClick={(e) => { e.stopPropagation(); onWhatsApp?.(); }}
+           className="flex items-center justify-center gap-1.5 h-8 rounded-lg bg-green-50 text-green-600 text-xs font-medium hover:bg-green-500 hover:text-white transition-colors"
+         >
+           <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
+         </button>
       </div>
     </div>
   );

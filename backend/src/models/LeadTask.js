@@ -88,6 +88,8 @@ const leadTaskSchema = new mongoose.Schema({
 
   completedAt: Date,
 
+  cancellationReason: String,
+
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

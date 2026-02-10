@@ -25,8 +25,10 @@ export const useLeadTasks = () => {
          setTaskLoading(true);
          try {
              const response = await divineSquareService.listAllTasks();
+             // console.log("Tasks response:", response); 
              if(response.status === 200) {
-                 setTasks(response.data);
+                 const data = Array.isArray(response.data) ? response.data : (response.data?.data || response.data?.tasks || []);
+                 setTasks(Array.isArray(data) ? data : []);
              }
          } catch(error) {
              console.error(error);

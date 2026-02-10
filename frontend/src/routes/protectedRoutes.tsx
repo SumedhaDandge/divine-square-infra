@@ -27,10 +27,16 @@ import RescheduleSiteVisit from "@/pages/RescheduleSiteVisit";
 
 import Masters from "@/pages/Masters";
 
+import Tasks from "@/pages/Tasks";
+
 export const protectedRoutes = [
   {
     path: "/dashboard",
     element: <Dashboard />,
+  },
+  {
+    path: "/tasks",
+    element: <Tasks />,
   },
   {
       path: "/masters",

@@ -110,8 +110,8 @@ class DivineSquareService {
   }
 
   // Task Actions
-  cancelTask(taskId: string): Promise<any> {
-      return divineSquareApi.cancelTask(taskId);
+  cancelTask(taskId: string, data: any = {}): Promise<any> {
+      return divineSquareApi.cancelTask(taskId, data);
   }
 
   // Upload

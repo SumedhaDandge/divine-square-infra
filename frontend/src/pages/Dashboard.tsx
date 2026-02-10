@@ -33,8 +33,8 @@ export default function Dashboard() {
   // Need to handle tasks which might be array or object. Assuming array based on usage.
   const taskList = Array.isArray(tasks) ? tasks : [];
   
-  const todayTasks = taskList.filter((t: any) => !t.completed && t.dueDate && isToday(new Date(t.dueDate)));
-  const overdueTasks = taskList.filter((t: any) => !t.completed && t.dueDate && isPast(new Date(t.dueDate)) && !isToday(new Date(t.dueDate)));
+  const todayTasks = taskList.filter((t: any) => !t.completed && t.scheduledAt && isToday(new Date(t.scheduledAt)));
+  const overdueTasks = taskList.filter((t: any) => !t.completed && t.scheduledAt && isPast(new Date(t.scheduledAt)) && !isToday(new Date(t.scheduledAt)));
   const upcomingSiteVisits = siteVisits?.filter((sv: any) => sv.status === "scheduled" && isFuture(new Date(sv.scheduled_date))).length || 0;
   const conversions = leads?.filter((l: any) => l.leadStatus === "closed").length || 0; // Assuming 'closed' is 'won'
 
@@ -149,9 +149,9 @@ export default function Dashboard() {
                   key={task._id}
                   id={task._id}
                   type={task.activityType}
-                  leadName={task.lead?.customerName || "Unknown"}
+                  leadName={task.lead?.customerName || "Lead Not Found"}
                   leadStatus={getTaskStatus(task)}
-                  time={format(new Date(task.dueDate), "MMM d, h:mm a")}
+                  time={format(new Date(task.scheduledAt), "MMM d, h:mm a")}
                   project={task.title}
                   isOverdue={true}
                   onCall={() => task.lead && window.open(`tel:${task.lead.mobile}`)}
@@ -174,9 +174,9 @@ export default function Dashboard() {
                   key={task._id}
                   id={task._id}
                   type={task.activityType}
-                  leadName={task.lead?.customerName || "Unknown"}
+                  leadName={task.lead?.customerName || "Lead Not Found"}
                   leadStatus={getTaskStatus(task)}
-                  time={format(new Date(task.dueDate), "h:mm a")}
+                  time={format(new Date(task.scheduledAt), "h:mm a")}
                   project={task.title}
                   onCall={() => task.lead && window.open(`tel:${task.lead.mobile}`)}
                   onWhatsApp={() => task.lead && window.open(`https://wa.me/${task.lead.mobile.replace(/\s/g, "")}`)}

@@ -277,364 +277,377 @@ export default function AddLead() {
 
   return (
     <AppShell showFab={false} showBottomNav={false}>
-      <header className="bg-primary text-primary-foreground px-4 pt-12 pb-6 sticky top-0 z-10 shadow-md">
-        <div className="flex items-center gap-3 mb-1">
-          <button onClick={() => navigate(-1)} className="touch-btn w-10 h-10 rounded-full bg-primary-foreground/20 hover:bg-primary-foreground/30 transition-colors">
+      <header className="fixed top-0 left-0 right-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/50 pb-2 shadow-sm">
+        <div className="flex items-center gap-3 px-4 pt-4 pb-2">
+          <button onClick={() => navigate(-1)} className="w-10 h-10 flex items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-muted/80 transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div className="flex-1">
-            <h1 className="text-xl font-bold">{isEditMode ? "Edit Lead" : "New Lead"}</h1>
-            {autoSaveStatus === "saved" && !isEditMode && <span className="text-[10px] opacity-80 flex items-center gap-1"><CheckCircle2 className="w-3 h-3"/> Draft saved</span>}
+            <h1 className="text-xl font-bold text-foreground">{isEditMode ? "Edit Lead" : "New Lead"}</h1>
+            {autoSaveStatus === "saved" && !isEditMode && <span className="text-[10px] text-green-600 flex items-center gap-1"><CheckCircle2 className="w-3 h-3"/> Draft saved</span>}
           </div>
         </div>
       </header>
-
-      <form onSubmit={handleSubmit} className="px-4 py-6 space-y-6 pb-20">
+      
+      {/* Spacer */}
+      <div className="h-20" />
+      <form id="lead-form" onSubmit={handleSubmit} className="px-4 py-4 space-y-6 pb-28">
         
         {/* SECTION 1: PERSONAL DETAILS */}
         <section className="space-y-4">
-          <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Personal Details</h3>
-          
-          {/* Name */}
-          <div className="crm-card">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                <User className="w-5 h-5 text-blue-500" />
-              </div>
-              <label className="text-sm font-semibold text-foreground">Full Name *</label>
-            </div>
-            <input
-              type="text"
-              placeholder="e.g. Rahul Sharma"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full h-12 px-4 rounded-xl bg-muted/50 border border-transparent focus:bg-background focus:border-primary/30 transition-all outline-none"
-            />
-            {errors.name && <p className="text-destructive text-xs mt-1 ml-1">{errors.name}</p>}
-          </div>
-
-          {/* Contact */}
-          <div className="grid grid-cols-1 gap-4">
-            <div className="crm-card">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
-                  <Phone className="w-5 h-5 text-green-500" />
-                </div>
-                <label className="text-sm font-semibold text-foreground">Mobile *</label>
-              </div>
-              <input
-                type="tel"
-                placeholder="10-digit number"
-                maxLength={10}
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
-                className="w-full h-12 px-4 rounded-xl bg-muted/50 border border-transparent focus:bg-background focus:border-primary/30 transition-all outline-none"
-              />
-              {errors.phone && <p className="text-destructive text-xs mt-1 ml-1">{errors.phone}</p>}
-            </div>
-
-            <div className="crm-card">
-               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
-                  <Mail className="w-5 h-5 text-orange-500" />
-                </div>
-                <label className="text-sm font-semibold text-foreground">Email</label>
-              </div>
-              <input
-                type="email"
-                placeholder="optional@email.com"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full h-12 px-4 rounded-xl bg-muted/50 border border-transparent focus:bg-background focus:border-primary/30 transition-all outline-none"
-              />
-               {errors.email && <p className="text-destructive text-xs mt-1 ml-1">{errors.email}</p>}
-            </div>
+          <div className="flex items-center gap-2 mb-2">
+              <User className="w-4 h-4 text-primary" />
+              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Personal Details</h3>
           </div>
           
-          {/* Location / Belongs From */}
-           <div className="crm-card">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
-                  <MapPin className="w-5 h-5 text-indigo-500" />
-                </div>
-                <label className="text-sm font-semibold text-foreground">City / Belongs From</label>
+          <div className="bg-card rounded-2xl border border-border/50 shadow-sm p-4 space-y-4">
+              {/* Name */}
+              <div>
+                <label className="text-xs font-semibold text-foreground mb-1.5 block">Full Name *</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Rahul Sharma"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full h-11 px-4 rounded-xl bg-muted/30 border border-border/50 focus:bg-background focus:border-primary/50 transition-all outline-none text-sm placeholder:text-muted-foreground/50"
+                />
+                {errors.name && <p className="text-destructive text-[10px] mt-1">{errors.name}</p>}
               </div>
-              <input
-                type="text"
-                placeholder="Where are they from?"
-                value={formData.belongsFrom}
-                onChange={(e) => setFormData({ ...formData, belongsFrom: e.target.value })}
-                className="w-full h-12 px-4 rounded-xl bg-muted/50 border border-transparent focus:bg-background focus:border-primary/30 transition-all outline-none"
-              />
-            </div>
+
+              {/* Mobile & Email */}
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                   <label className="text-xs font-semibold text-foreground mb-1.5 block">Mobile Number *</label>
+                   <div className="relative">
+                       <Phone className="absolute left-3.5 top-3 w-4 h-4 text-muted-foreground/50" />
+                       <input
+                        type="tel"
+                        placeholder="9876543210"
+                        maxLength={10}
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
+                        className="w-full h-11 pl-10 pr-4 rounded-xl bg-muted/30 border border-border/50 focus:bg-background focus:border-primary/50 transition-all outline-none text-sm placeholder:text-muted-foreground/50"
+                      />
+                   </div>
+                   {errors.phone && <p className="text-destructive text-[10px] mt-1">{errors.phone}</p>}
+                </div>
+                
+                <div>
+                   <label className="text-xs font-semibold text-foreground mb-1.5 block">Email Address</label>
+                   <div className="relative">
+                       <Mail className="absolute left-3.5 top-3 w-4 h-4 text-muted-foreground/50" />
+                       <input
+                        type="email"
+                        placeholder="rahul@example.com"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className="w-full h-11 pl-10 pr-4 rounded-xl bg-muted/30 border border-border/50 focus:bg-background focus:border-primary/50 transition-all outline-none text-sm placeholder:text-muted-foreground/50"
+                      />
+                   </div>
+                   {errors.email && <p className="text-destructive text-[10px] mt-1">{errors.email}</p>}
+                </div>
+              </div>
+
+              {/* Location */}
+              <div>
+                <label className="text-xs font-semibold text-foreground mb-1.5 block">City / Belongs From</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Mumbai"
+                  value={formData.belongsFrom}
+                  onChange={(e) => setFormData({ ...formData, belongsFrom: e.target.value })}
+                  className="w-full h-11 px-4 rounded-xl bg-muted/30 border border-border/50 focus:bg-background focus:border-primary/50 transition-all outline-none text-sm placeholder:text-muted-foreground/50"
+                />
+              </div>
+          </div>
         </section>
 
         {/* SECTION 2: REQUIREMENTS */}
         <section className="space-y-4">
-          <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Requirements</h3>
+          <div className="flex items-center gap-2 mb-2">
+               <Briefcase className="w-4 h-4 text-primary" />
+               <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Requirements</h3>
+          </div>
 
-          <ToggleGroup 
-            label="Looking For" 
-            icon={Target} 
-            options={["Residential", "Commercial"]} 
-            value={formData.lookingFor}
-            onChange={(val: any) => setFormData({...formData, lookingFor: val})} 
-          />
-
-          <ToggleGroup 
-            label="Property Type" 
-            icon={Home} 
-            options={["Plot", "Flat", "Shop", "Office"]} 
-            value={formData.propertyType}
-            onChange={(val: any) => setFormData({...formData, propertyType: val})} 
-          />
-
-           <ToggleGroup 
-            label="Purpose" 
-            icon={Briefcase} 
-            options={["Investment", "Self Use", "Rental"]} 
-            value={formData.purpose}
-            onChange={(val: any) => setFormData({...formData, purpose: val})} 
-          />
-
-           {/* Projects */}
-           <div className="crm-card">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
-                <Building2 className="w-5 h-5 text-purple-500" />
-              </div>
-              <label className="text-sm font-semibold text-foreground">Interested Projects</label>
-            </div>
-            
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setShowProjectDropdown(!showProjectDropdown)}
-                className="w-full min-h-[3rem] px-4 py-2 rounded-xl bg-muted/50 border border-transparent text-left flex items-center justify-between"
-              >
-                <div className="flex flex-wrap gap-1">
-                  {selectedProjects?.length > 0 ? (
-                    selectedProjects.map((p: any) => (
-                      <span key={p._id} className="text-xs bg-background border px-2 py-1 rounded-md">{p.projectName}</span>
-                    ))
-                  ) : <span className="text-muted-foreground">Select projects...</span>}
-                </div>
-                <ChevronDown className={cn("w-4 h-4 transition-transform ml-2", showProjectDropdown && "rotate-180")} />
-              </button>
+          <div className="bg-card rounded-2xl border border-border/50 shadow-sm p-4 space-y-5">
               
-              {showProjectDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-popover border rounded-xl shadow-xl z-20 max-h-60 overflow-y-auto p-1">
-                  {projects?.map((p: any) => {
-                    const isSelected = formData.project_interests.includes(p._id);
-                    return (
-                        <button
-                          key={p._id}
-                          type="button"
-                          onClick={() => {
-                            const current = formData.project_interests;
-                            const updated = isSelected ? current.filter(id => id !== p._id) : [...current, p._id];
-                            setFormData({...formData, project_interests: updated});
-                          }}
-                          className={cn(
-                            "w-full text-left px-3 py-2 rounded-lg text-sm flex items-center justify-between mb-1",
-                            isSelected ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted"
-                          )}
-                        >
-                          {p.projectName}
-                          {isSelected && <CheckCircle2 className="w-4 h-4" />}
-                        </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
+              {/* Looking For */}
+              <div>
+                  <label className="text-xs font-semibold text-foreground mb-2 block">Looking For</label>
+                  <div className="flex bg-muted/50 p-1 rounded-xl">
+                      {["Residential", "Commercial"].map((opt) => (
+                          <button
+                            key={opt}
+                            type="button"
+                            onClick={() => setFormData({...formData, lookingFor: opt as any})}
+                            className={cn(
+                                "flex-1 py-1.5 text-xs font-medium rounded-lg transition-all",
+                                formData.lookingFor === opt ? "bg-background shadow-sm text-primary font-semibold" : "text-muted-foreground hover:text-foreground"
+                            )}
+                          >
+                              {opt}
+                          </button>
+                      ))}
+                  </div>
+              </div>
 
-        {/* Budget */}
-          <div className="crm-card">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center">
-                <Wallet className="w-5 h-5 text-yellow-500" />
+              {/* Property Type */}
+              <div>
+                  <label className="text-xs font-semibold text-foreground mb-2 block">Property Type</label>
+                  <div className="grid grid-cols-4 gap-2">
+                       {["Plot", "Flat", "Shop", "Office"].map((opt) => (
+                           <button
+                             key={opt}
+                             type="button"
+                             onClick={() => setFormData({...formData, propertyType: opt as any})}
+                             className={cn(
+                                 "py-2 text-[10px] font-medium rounded-lg border transition-all truncate",
+                                 formData.propertyType === opt 
+                                    ? "bg-primary/5 border-primary/30 text-primary" 
+                                    : "bg-background border-border/50 text-muted-foreground hover:bg-muted/50"
+                             )}
+                           >
+                               {opt}
+                           </button>
+                       ))}
+                  </div>
               </div>
-              <label className="text-sm font-semibold text-foreground">Budget (₹)</label>
-            </div>
-            <input
-              type="text"
-              value={formData.budget}
-              onChange={handleBudgetChange}
-              className="w-full h-12 px-4 rounded-xl bg-muted/50 border-transparent focus:bg-background focus:border-primary/30 border outline-none text-sm"
-              placeholder="Enter budget (e.g. 50,000)"
-            />
+
+              {/* Purpose */}
+              <div>
+                  <label className="text-xs font-semibold text-foreground mb-2 block">Purpose</label>
+                  <div className="flex gap-2">
+                       {["Investment", "Self Use", "Rental"].map((opt) => (
+                           <button
+                             key={opt}
+                             type="button"
+                             onClick={() => setFormData({...formData, purpose: opt as any})}
+                             className={cn(
+                                 "flex-1 py-2 text-xs font-medium rounded-lg border transition-all",
+                                 formData.purpose === opt 
+                                    ? "bg-primary/5 border-primary/30 text-primary" 
+                                    : "bg-background border-border/50 text-muted-foreground hover:bg-muted/50"
+                             )}
+                           >
+                               {opt}
+                           </button>
+                       ))}
+                  </div>
+              </div>
+
+               {/* Projects */}
+               <div>
+                  <label className="text-xs font-semibold text-foreground mb-1.5 block">Interested Projects</label>
+                  <div className="relative">
+                    <button
+                        type="button"
+                        onClick={() => setShowProjectDropdown(!showProjectDropdown)}
+                        className="w-full min-h-[2.75rem] px-3 py-2 rounded-xl bg-muted/30 border border-border/50 text-left flex items-center justify-between"
+                    >
+                        <div className="flex flex-wrap gap-1.5">
+                        {selectedProjects?.length > 0 ? (
+                            selectedProjects.map((p: any) => (
+                            <span key={p._id} className="text-[10px] bg-background border border-border/50 px-2 py-0.5 rounded-md font-medium text-foreground">{p.projectName}</span>
+                            ))
+                        ) : <span className="text-sm text-muted-foreground/50">Select projects...</span>}
+                        </div>
+                        <ChevronDown className={cn("w-4 h-4 text-muted-foreground transition-transform shrink-0", showProjectDropdown && "rotate-180")} />
+                    </button>
+                    
+                    {showProjectDropdown && (
+                        <div className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border/50 rounded-xl shadow-xl z-20 max-h-60 overflow-y-auto p-1">
+                        {projects?.map((p: any) => {
+                            const isSelected = formData.project_interests.includes(p._id);
+                            return (
+                                <button
+                                key={p._id}
+                                type="button"
+                                onClick={() => {
+                                    const current = formData.project_interests;
+                                    const updated = isSelected ? current.filter(id => id !== p._id) : [...current, p._id];
+                                    setFormData({...formData, project_interests: updated});
+                                }}
+                                className={cn(
+                                    "w-full text-left px-3 py-2 rounded-lg text-sm flex items-center justify-between mb-1",
+                                    isSelected ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted"
+                                )}
+                                >
+                                {p.projectName}
+                                {isSelected && <CheckCircle2 className="w-4 h-4" />}
+                                </button>
+                            );
+                        })}
+                        </div>
+                    )}
+                  </div>
+               </div>
+
+              {/* Budget */}
+               <div>
+                   <label className="text-xs font-semibold text-foreground mb-1.5 block">Budget (₹)</label>
+                   <div className="relative">
+                        <Wallet className="absolute left-3.5 top-3 w-4 h-4 text-muted-foreground/50" />
+                        <input
+                            type="text"
+                            value={formData.budget}
+                            onChange={handleBudgetChange}
+                            className="w-full h-11 pl-10 pr-4 rounded-xl bg-muted/30 border border-border/50 focus:bg-background focus:border-primary/50 transition-all outline-none text-sm placeholder:text-muted-foreground/50"
+                            placeholder="e.g. 50,00,000"
+                        />
+                   </div>
+               </div>
+              
+              {/* Preferred Location */}
+               <div>
+                   <label className="text-xs font-semibold text-foreground mb-1.5 block">Preferred Location</label>
+                   <input
+                    type="text"
+                    placeholder="e.g. Near Airport"
+                    value={formData.lookingLocation}
+                    onChange={(e) => setFormData({ ...formData, lookingLocation: e.target.value })}
+                    className="w-full h-11 px-4 rounded-xl bg-muted/30 border border-border/50 focus:bg-background focus:border-primary/50 transition-all outline-none text-sm placeholder:text-muted-foreground/50"
+                  />
+               </div>
           </div>
-          
-           {/* Preferred Location */}
-           <div className="crm-card">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-xl bg-pink-500/10 flex items-center justify-center">
-                  <MapPin className="w-5 h-5 text-pink-500" />
-                </div>
-                <label className="text-sm font-semibold text-foreground">Preferred Location</label>
-              </div>
-              <input
-                type="text"
-                placeholder="e.g. Near Airport, City Center"
-                value={formData.lookingLocation}
-                onChange={(e) => setFormData({ ...formData, lookingLocation: e.target.value })}
-                className="w-full h-12 px-4 rounded-xl bg-muted/50 border border-transparent focus:bg-background focus:border-primary/30 transition-all outline-none"
-              />
-            </div>
         </section>
 
         {/* SECTION 3: OTHER INFO */}
         <section className="space-y-4">
-          <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Status, Source & Notes</h3>
+           <div className="flex items-center gap-2 mb-2">
+               <FileText className="w-4 h-4 text-primary" />
+               <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Additional Info</h3>
+          </div>
           
-        {/* Status (Only in Edit Mode) */}
-        {isEditMode && (
-          <div className="crm-card">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
-                <CheckCircle2 className="w-5 h-5 text-indigo-500" />
-              </div>
-              <label className="text-sm font-semibold text-foreground">Lead Status *</label>
-            </div>
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setShowStatusDropdown(!showStatusDropdown)}
-                className="w-full h-12 px-4 rounded-xl bg-muted/50 border border-transparent text-left flex items-center justify-between"
-              >
-                <span className="capitalize">
-                  {formData.leadStatus?.replace(/_/g, " ") || "New"}
-                </span>
-                <ChevronDown className={cn("w-4 h-4 transition-transform ml-2", showStatusDropdown && "rotate-180")} />
-              </button>
-              
-              {showStatusDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-popover border rounded-xl shadow-xl z-20 max-h-60 overflow-y-auto p-1">
-                  {[
-                    "new", "hot", "warm", "cold", 
-                    "site_visit_scheduled", "site_visit_completed", "site_visit_done", 
-                    "negotiation", "booked", "converted", "lost"
-                  ].map((status) => (
-                    <button
-                      key={status}
-                      type="button"
-                      onClick={() => {
-                        setFormData({...formData, leadStatus: status});
-                        setShowStatusDropdown(false);
-                      }}
-                      className={cn(
-                        "w-full text-left px-3 py-2 rounded-lg text-sm mb-1 hover:bg-muted capitalize",
-                        formData.leadStatus === status && "bg-primary/10 text-primary font-medium"
-                      )}
-                    >
-                      {status.replace(/_/g, " ")}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-
-          {/* Source */}
-          <div className="crm-card">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center">
-                <Target className="w-5 h-5 text-teal-500" />
-              </div>
-              <label className="text-sm font-semibold text-foreground">Source *</label>
-            </div>
-             <div className="relative">
-              <button
-                type="button"
-                onClick={() => setShowSourceDropdown(!showSourceDropdown)}
-                className="w-full h-12 px-4 rounded-xl bg-muted/50 border border-transparent text-left flex items-center justify-between"
-              >
-                <span className={!formData.source ? "text-muted-foreground" : ""}>
-                   {leadSources?.find((s: any) => s._id === formData.source)?.name || "Select Source"}
-                </span>
-                <ChevronDown className={cn("w-4 h-4 transition-transform ml-2", showSourceDropdown && "rotate-180")} />
-              </button>
-              
-              {showSourceDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-popover border rounded-xl shadow-xl z-20 max-h-60 overflow-y-auto p-1">
-                  {leadSources?.map((s: any) => (
-                     <button
-                        key={s._id}
-                        type="button"
-                        onClick={() => {
-                          setFormData({...formData, source: s._id});
-                          setShowSourceDropdown(false);
-                        }}
-                        className={cn(
-                          "w-full text-left px-3 py-2 rounded-lg text-sm mb-1",
-                          formData.source === s._id ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted"
+          <div className="bg-card rounded-2xl border border-border/50 shadow-sm p-4 space-y-4">
+              {/* Status (Edit Mode Only) */}
+              {isEditMode && (
+                  <div>
+                      <label className="text-xs font-semibold text-foreground mb-1.5 block">Lead Status</label>
+                      <div className="relative">
+                        <button
+                            type="button"
+                            onClick={() => setShowStatusDropdown(!showStatusDropdown)}
+                            className="w-full h-11 px-4 rounded-xl bg-muted/30 border border-border/50 text-left flex items-center justify-between text-sm"
+                        >
+                            <span className="capitalize font-medium">
+                            {formData.leadStatus?.replace(/_/g, " ") || "New"}
+                            </span>
+                            <ChevronDown className={cn("w-4 h-4 text-muted-foreground transition-transform", showStatusDropdown && "rotate-180")} />
+                        </button>
+                        
+                        {showStatusDropdown && (
+                            <div className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border/50 rounded-xl shadow-xl z-20 max-h-60 overflow-y-auto p-1">
+                            {[
+                                "new", "hot", "warm", "cold", 
+                                "site_visit_scheduled", "site_visit_completed", "site_visit_done", 
+                                "negotiation", "booked", "converted", "lost"
+                            ].map((status) => (
+                                <button
+                                key={status}
+                                type="button"
+                                onClick={() => {
+                                    setFormData({...formData, leadStatus: status});
+                                    setShowStatusDropdown(false);
+                                }}
+                                className={cn(
+                                    "w-full text-left px-3 py-2 rounded-lg text-sm mb-1 hover:bg-muted capitalize",
+                                    formData.leadStatus === status && "bg-primary/10 text-primary font-medium"
+                                )}
+                                >
+                                {status.replace(/_/g, " ")}
+                                </button>
+                            ))}
+                            </div>
                         )}
-                      >
-                        {s.name}
-                      </button>
-                  ))}
-                </div>
+                        </div>
+                  </div>
               )}
-            </div>
-            {errors.source && <p className="text-destructive text-xs mt-1 ml-1">{errors.source}</p>}
-          </div>
 
-          {/* Future Interest */}
-          <div className="crm-card flex items-center justify-between py-4">
-             <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center">
-                  <CalendarClock className="w-5 h-5 text-cyan-500" />
-                </div>
-                <div>
-                   <label className="text-sm font-semibold text-foreground block">Future Interest</label>
-                   <p className="text-xs text-muted-foreground">Is the customer interested in future projects?</p>
-                </div>
-             </div>
-             <div 
-               onClick={() => setFormData({...formData, isFutureInterest: !formData.isFutureInterest})}
-               className={cn(
-                 "w-12 h-6 rounded-full relative cursor-pointer transition-colors",
-                 formData.isFutureInterest ? "bg-primary" : "bg-muted"
-               )}
-             >
-                <div className={cn(
-                   "w-4 h-4 rounded-full bg-white absolute top-1 transition-transform",
-                   formData.isFutureInterest ? "left-7" : "left-1"
-                )} />
-             </div>
-          </div>
-
-          {/* Notes */}
-          <div className="crm-card">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl bg-gray-500/10 flex items-center justify-center">
-                <FileText className="w-5 h-5 text-gray-500" />
+              {/* Source */}
+              <div>
+                  <label className="text-xs font-semibold text-foreground mb-1.5 block">Source *</label>
+                  <div className="relative">
+                    <button
+                        type="button"
+                        onClick={() => setShowSourceDropdown(!showSourceDropdown)}
+                        className="w-full h-11 px-4 rounded-xl bg-muted/30 border border-border/50 text-left flex items-center justify-between text-sm"
+                    >
+                        <span className={cn("truncate", !formData.source && "text-muted-foreground/50")}>
+                        {leadSources?.find((s: any) => s._id === formData.source)?.name || "Select Source"}
+                        </span>
+                        <ChevronDown className={cn("w-4 h-4 text-muted-foreground transition-transform", showSourceDropdown && "rotate-180")} />
+                    </button>
+                    
+                    {showSourceDropdown && (
+                        <div className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border/50 rounded-xl shadow-xl z-20 max-h-60 overflow-y-auto p-1">
+                        {leadSources?.map((s: any) => (
+                            <button
+                                key={s._id}
+                                type="button"
+                                onClick={() => {
+                                setFormData({...formData, source: s._id});
+                                setShowSourceDropdown(false);
+                                }}
+                                className={cn(
+                                "w-full text-left px-3 py-2 rounded-lg text-sm mb-1",
+                                formData.source === s._id ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted"
+                                )}
+                            >
+                                {s.name}
+                            </button>
+                        ))}
+                        </div>
+                    )}
+                    </div>
+                    {errors.source && <p className="text-destructive text-[10px] mt-1">{errors.source}</p>}
               </div>
-              <label className="text-sm font-semibold text-foreground">Remarks / Notes</label>
-            </div>
-            <textarea
-              value={formData.notes}
-              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-              className="w-full p-4 rounded-xl bg-muted/50 border border-transparent focus:bg-background focus:border-primary/30 transition-all outline-none resize-none min-h-[100px]"
-              placeholder="Any other details..."
-            />
+
+               {/* Future Interest */}
+               <div className="flex items-center justify-between py-2">
+                    <div>
+                        <label className="text-xs font-semibold text-foreground block">Future Interest</label>
+                        <p className="text-[10px] text-muted-foreground">Interested in future projects?</p>
+                    </div>
+                    <div 
+                    onClick={() => setFormData({...formData, isFutureInterest: !formData.isFutureInterest})}
+                    className={cn(
+                        "w-10 h-6 rounded-full relative cursor-pointer transition-colors",
+                        formData.isFutureInterest ? "bg-primary" : "bg-muted"
+                    )}
+                    >
+                    <div className={cn(
+                        "w-4 h-4 rounded-full bg-white absolute top-1 transition-transform",
+                        formData.isFutureInterest ? "left-5" : "left-1"
+                    )} />
+                    </div>
+                </div>
+
+              {/* Notes */}
+              <div>
+                  <label className="text-xs font-semibold text-foreground mb-1.5 block">Remarks</label>
+                  <textarea
+                    value={formData.notes}
+                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    className="w-full p-3 rounded-xl bg-muted/30 border border-border/50 focus:bg-background focus:border-primary/50 transition-all outline-none resize-none min-h-[80px] text-sm placeholder:text-muted-foreground/50"
+                    placeholder="Enter any additional details..."
+                    />
+              </div>
           </div>
         </section>
-
-        {/* Submit */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full h-14 bg-primary text-primary-foreground text-lg font-bold rounded-2xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-70 disabled:hover:scale-100"
-        >
-          {loading ? "Saving..." : isEditMode ? "Update Lead" : "Create Lead"}
-        </button>
-
       </form>
+
+        {/* Submit Button - Fixed Bottom */}
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border/50 z-[60] pb-[calc(1rem+env(safe-area-inset-bottom))]">
+            <button
+            form="lead-form"
+            type="submit"
+            disabled={loading}
+            className="w-full h-12 bg-primary text-primary-foreground text-sm font-bold rounded-xl shadow-lg shadow-primary/20 hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-70"
+            >
+            {loading ? "Saving..." : isEditMode ? "Update Lead" : "Create Lead"}
+            </button>
+        </div>
+
     </AppShell>
   );
 }

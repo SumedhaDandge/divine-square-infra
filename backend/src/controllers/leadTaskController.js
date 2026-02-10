@@ -98,6 +98,9 @@ export const cancelTask = async (req, res) => {
       if (!task) return errorResponse(res, 404, "Task not found");
       
       task.status = "cancelled";
+      if (req.body.reason) {
+          task.cancellationReason = req.body.reason;
+      }
       await task.save();
       
       return successResponse(res, 200, "Task cancelled", task);

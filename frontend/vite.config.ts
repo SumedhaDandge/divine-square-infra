@@ -17,24 +17,24 @@ export default defineConfig(({ mode }) => ({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
-        name: 'Divine Square Infra',
-        short_name: 'DivineSquare',
+        name: 'Divine Square Infra CRM',
+        short_name: 'DivineCRM',
         description: 'Divine Square Infrastructure CRM',
-        theme_color: '#ffffff',
-        start_url: '/',
+        theme_color: '#0f172a',
+        start_url: '/dashboard',
         display: 'standalone',
         background_color: '#ffffff',
         orientation: 'portrait',
         icons: [
           {
-            src: 'placeholder.svg',
+            src: 'logo.png',
             sizes: '192x192',
-            type: 'image/svg+xml'
+            type: 'image/png'
           },
           {
-            src: 'placeholder.svg',
+            src: 'logo.png',
             sizes: '512x512',
-            type: 'image/svg+xml'
+            type: 'image/png'
           }
         ]
       },

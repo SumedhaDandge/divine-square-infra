@@ -1,12 +1,12 @@
 import { AppShell } from "@/components/layout/AppShell";
-import { Bell, Phone, MapPin, FileText, Clock, Check, Trash2, Calendar, MessageSquare, AlertTriangle } from "lucide-react";
+import { Bell, Phone, MapPin, FileText, Clock, Check, Trash2, Calendar, MessageSquare, AlertTriangle, CheckCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLeadTasks } from "@/hooks/useLeadTasks";
-import { useEffect, useState } from "react";
-import { format, isToday, isFuture, differenceInMinutes, parseISO } from "date-fns";
+import { useEffect, useState, useRef } from "react";
+import { format, isToday, isFuture, differenceInMinutes, parseISO, isYesterday } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
-// Mock system notifications
+// Mock system notifications for now
 const systemNotifications : any[] = [];
 
 const iconMap: Record<string, any> = {
@@ -37,11 +37,39 @@ export default function Notifications() {
   const navigate = useNavigate();
   const { tasks, fetchAllTasks, isLoading } = useLeadTasks();
   const [now, setNow] = useState(new Date());
+  const [permission, setPermission] = useState(
+    "Notification" in window ? Notification.permission : "default"
+  );
+  
+  // Read state persistence
+  const [readIds, setReadIds] = useState<string[]>(() => {
+      const saved = localStorage.getItem("read_notifications");
+      return saved ? JSON.parse(saved) : [];
+  });
+
+  const lastNotifiedRef = useRef<Record<string, number>>({});
+
+  useEffect(() => {
+    localStorage.setItem("read_notifications", JSON.stringify(readIds));
+  }, [readIds]);
+
+  const markAsRead = (id: string) => {
+      if (!readIds.includes(id)) {
+          setReadIds(prev => [...prev, id]);
+      }
+  };
+
+  const clearAll = () => {
+      // Mark ALL current tasks as read
+      const allIds = tasks.map((t: any) => t._id);
+      // Merge with existing readIds to avoid duplicates
+      const newReadIds = Array.from(new Set([...readIds, ...allIds]));
+      setReadIds(newReadIds);
+  };
 
   useEffect(() => {
     fetchAllTasks();
     
-    // Request notification permission
     if ("Notification" in window && Notification.permission !== "granted") {
       Notification.requestPermission();
     }
@@ -50,43 +78,55 @@ export default function Notifications() {
         const currentNow = new Date();
         setNow(currentNow);
 
-        // Check for urgent tasks to notify
-        // logic: due in next 15 mins
-        if ("Notification" in window && Notification.permission === "granted") {
-            const urgentTasks = (Array.isArray(tasks) ? tasks : []).filter((t: any) => {
-                const d = new Date(t.dueDate);
-                const diff = differenceInMinutes(d, currentNow);
-                return !t.completed && diff <= 15 && diff > 0;
-            });
+        if (!("Notification" in window) || Notification.permission !== "granted") return;
 
-            if (urgentTasks.length > 0) {
-                 // Simple throttle: only notify if we haven't in last 5 mins?? 
-                 // For now, let's just notify the first one if we are exactly at 15, 10, 5 mins?
-                 // Or just notify. To avoid spam, we rely on the implementation or just notify once per urgency window?
-                 // User said "after every 5 mins".
-                 // Detailed implementation would require state tracking per task.
-                 // For MVP, likely just showing them in list is enough, but I'll add a generic "You have X urgent tasks" if not focused?
-                 // Let's stick to list update.
+        const urgentTasks = (Array.isArray(tasks) ? tasks : []).filter((t: any) => {
+            if (t.completed || !t.scheduledAt) return false;
+            const d = new Date(t.scheduledAt);
+            const diff = differenceInMinutes(d, currentNow);
+            return diff <= 15 && diff >= -5;
+        });
+
+        urgentTasks.forEach((task: any) => {
+            const lastTime = lastNotifiedRef.current[task._id] || 0;
+            const timeSinceLastNotify = currentNow.getTime() - lastTime;
+            const notificationInterval = 5 * 60 * 1000; // 5 minutes
+
+            if (timeSinceLastNotify >= notificationInterval) {
+                try {
+                    const title = `Reminder: ${task.activityType ? task.activityType.toUpperCase() : "TASK"}`;
+                    const options = {
+                        body: `Upcoming with ${task.lead?.customerName || 'Client'}\n${task.remark || ''}`,
+                        icon: '/vite.svg',
+                        tag: task._id
+                    };
+                    
+                    new Notification(title, options);
+                } catch(e) { console.error("Notification error", e); }
+                
+                lastNotifiedRef.current[task._id] = currentNow.getTime();
             }
-        }
+        });
     };
 
-    const interval = setInterval(checkReminders, 60000); // Update every minute
+    const interval = setInterval(checkReminders, 30000);
+    checkReminders();
+
     return () => clearInterval(interval);
   }, [tasks]);
 
   // Filter and Process Tasks
   const taskNotifications = (Array.isArray(tasks) ? tasks : [])
-    .filter((task: any) => !task.completed && task.dueDate)
+    .filter((task: any) => !task.completed && task.scheduledAt)
     .map((task: any) => {
-      const dueDate = new Date(task.dueDate);
+      const dueDate = new Date(task.scheduledAt);
       const diff = differenceInMinutes(dueDate, now);
       
       let type = "reminder";
       if (task.activityType) type = task.activityType;
 
-      // Determine urgency
-      const isUrgent = diff <= 15 && diff > -60; // Due in 15 mins or overdue by 1 hour
+      const isUrgent = diff <= 15 && diff > -60;
+      const isRead = readIds.includes(task._id);
 
       return {
         id: task._id,
@@ -94,78 +134,151 @@ export default function Notifications() {
         title: isUrgent ? "Upcoming Task Reminder" : `${task.activityType ? task.activityType.replace('_', ' ').toUpperCase() : 'Task'}`,
         message: `${task.lead?.customerName || "Lead"} - ${task.remark || task.title || "No details"}`,
         time: isUrgent && diff > 0 ? `Due in ${diff} mins` : (isToday(dueDate) ? format(dueDate, "h:mm a") : format(dueDate, "MMM d, h:mm a")),
-        read: false,
+        read: isRead,
         date: dueDate,
-        isUrgent,
-        isSystem: false,
+        isUrgent: isUrgent && !isRead, // If read, remove urgent styling? Or keep urgency but mark read? Let's keep urgency flag but use read to dim.
+        originalUrgency: isUrgent,
+        isSystem: false, 
         leadId: task.lead?._id
       };
     });
 
-  // Merge and Sort
+  // Sort
   const allNotifications = [...taskNotifications, ...systemNotifications].sort((a, b) => {
-    // Urgent first, then by date desc
+    // Unread first
+    if (!a.read && b.read) return -1;
+    if (a.read && !b.read) return 1;
+
+    // Then Urgent
     if (a.isUrgent && !b.isUrgent) return -1;
     if (!a.isUrgent && b.isUrgent) return 1;
     return b.date.getTime() - a.date.getTime();
   });
 
+  // Grouping Logic
+  const grouped = allNotifications.reduce((acc: any, note: any) => {
+      let key = "Earlier";
+      if (note.isUrgent) key = "Urgent";
+      else if (isToday(note.date)) key = "Today";
+      else if (isYesterday(note.date)) key = "Yesterday";
+      
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(note);
+      return acc;
+  }, {});
+
+  const groupOrder = ["Urgent", "Today", "Yesterday", "Earlier"];
+  const unreadCount = allNotifications.filter(n => !n.read).length;
+
   return (
     <AppShell showFab={false}>
-      {/* Header */}
-      <header className="bg-card border-b border-border px-4 pt-12 pb-4 sticky top-0 z-30">
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold text-foreground">Notifications</h1>
-          <button className="text-sm text-primary font-medium">Clear All</button>
+      <header className="fixed top-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border/50 transition-all">
+        <div className="flex items-center justify-between px-4 pt-4 pb-3">
+          <div className="flex items-center gap-3">
+             <div className="relative">
+                <Bell className="w-5 h-5 text-foreground" />
+                {unreadCount > 0 && <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-background" />}
+             </div>
+             <h1 className="text-lg font-bold text-foreground">Notifications</h1>
+          </div>
+          
+          <div className="flex gap-2">
+            {unreadCount > 0 && (
+                <button 
+                    onClick={clearAll}
+                    className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground px-2 py-1 rounded-md hover:bg-muted transition-colors"
+                >
+                    <CheckCheck className="w-3.5 h-3.5" />
+                    Mark all read
+                </button>
+            )}
+            {permission !== "granted" && (
+                <button 
+                    onClick={() => {
+                        Notification.requestPermission().then(p => setPermission(p));
+                    }}
+                    className="text-xs font-bold bg-primary text-primary-foreground px-3 py-1.5 rounded-full shadow-sm"
+                >
+                    Enable Push
+                </button>
+            )}
+           </div>
         </div>
       </header>
+      
+      <div className="h-16" /> 
 
-      <main className="flex-1 pb-20">
+      <main className="flex-1 px-4 pt-4 pb-24 space-y-6">
         {allNotifications.length === 0 ? (
-             <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
-                 <Bell className="w-12 h-12 mb-4 opacity-20" />
-                 <p>No new notifications</p>
+             <div className="flex flex-col items-center justify-center py-24 text-center">
+                 <div className="w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center mb-4">
+                    <Bell className="w-8 h-8 text-muted-foreground/40" />
+                 </div>
+                 <h3 className="text-sm font-medium text-foreground">No notifications</h3>
              </div>
         ) : (
-            allNotifications.map((notification) => {
-            const Icon = iconMap[notification.type] || Bell;
-            const colorClass = colorMap[notification.type] || "bg-muted text-muted-foreground";
+            groupOrder.map((label) => {
+                const items = grouped[label];
+                if (!items || items.length === 0) return null;
 
-            return (
-                <div
-                key={notification.id}
-                onClick={() => notification.leadId && navigate(`/leads/${notification.leadId}`)}
-                className={cn(
-                    "flex items-start gap-3 px-4 py-4 border-b border-border transition-colors cursor-pointer active:bg-muted/50",
-                    !notification.read && "bg-primary/5",
-                    notification.isUrgent && "bg-red-500/5 border-l-4 border-l-red-500"
-                )}
-                >
-                <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center shrink-0", colorClass)}>
-                    {notification.isUrgent ? <AlertTriangle className="w-5 h-5 text-red-500" /> : <Icon className="w-5 h-5" />}
-                </div>
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                    <h3 className={cn(
-                        "text-sm truncate",
-                        notification.isUrgent ? "font-bold text-red-600" : (!notification.read ? "font-semibold text-foreground" : "font-medium text-foreground")
-                    )}>
-                        {notification.title}
-                    </h3>
-                    {!notification.read && !notification.isUrgent && (
-                        <span className="w-2 h-2 rounded-full bg-primary shrink-0 mt-1.5" />
-                    )}
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">
-                    {notification.message}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1.5 flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {notification.isUrgent ? <span className="text-red-500 font-medium">Due: {notification.time}</span> : notification.time}
-                    </p>
-                </div>
-                </div>
-            );
+                return (
+                    <section key={label} className="space-y-2">
+                        <div className="flex items-center gap-2 pl-1 mb-2">
+                            <span className={cn(
+                                "w-1.5 h-1.5 rounded-full",
+                                label === "Urgent" ? "bg-red-500" :
+                                label === "Today" ? "bg-primary" : "bg-muted-foreground/30"
+                            )} />
+                            <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{label}</h2>
+                        </div>
+                        
+                        <div className="grid gap-2">
+                            {items.map((notification: any) => {
+                                const Icon = iconMap[notification.type] || Bell;
+                                const colorClass = colorMap[notification.type] || "bg-muted text-muted-foreground";
+                                
+                                return (
+                                    <div
+                                    key={notification.id}
+                                    onClick={() => {
+                                        markAsRead(notification.id);
+                                        if(notification.leadId) navigate(`/leads/${notification.leadId}`);
+                                    }}
+                                    className={cn(
+                                        "group relative bg-card border-b border-border/50 p-3.5 hover:bg-muted/30 transition-colors cursor-pointer first:rounded-t-xl last:rounded-b-xl last:border-0",
+                                        notification.isUrgent && "bg-red-50/40",
+                                        notification.read && "opacity-60 bg-muted/5"
+                                    )}
+                                    >
+                                        <div className="flex items-start gap-3">
+                                            <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5", colorClass)}>
+                                                {notification.originalUrgency ? <AlertTriangle className="w-4 h-4 text-red-600" /> : <Icon className="w-4 h-4" />}
+                                            </div>
+                                            
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center justify-between gap-2 mb-0.5">
+                                                    <h3 className={cn("text-sm font-semibold truncate leading-tight", notification.originalUrgency ? "text-red-700" : "text-foreground")}>
+                                                        {notification.title}
+                                                    </h3>
+                                                    <span className="text-[10px] text-muted-foreground whitespace-nowrap shrink-0">
+                                                        {notification.time}
+                                                    </span>
+                                                </div>
+                                                
+                                                <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed pr-2">
+                                                    {notification.message}
+                                                </p>
+                                            </div>
+                                            {!notification.read && (
+                                                <div className="absolute top-4 right-2 w-2 h-2 rounded-full bg-primary" />
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </section>
+                );
             })
         )}
       </main>

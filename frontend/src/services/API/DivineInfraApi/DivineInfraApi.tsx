@@ -163,8 +163,8 @@ class DivineSquareApi {
   }
 
   // Task Actions
-  cancelTask(taskId: string): Promise<any> {
-      return api._patch(`${this._urlMapping.LEAD_TASKS}/cancel/${taskId}`, {});
+  cancelTask(taskId: string, data: any): Promise<any> {
+      return api._patch(`${this._urlMapping.LEAD_TASKS}/cancel/${taskId}`, data);
   }
 
   uploadMedia(data: FormData): Promise<any> {

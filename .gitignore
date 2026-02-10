@@ -1,2 +1,7 @@
 backend/node_modules/y18n/build/lib/cjs.js
 /backend/node_modules
+backend/logs/exceptions.log
+*.pdf
+*.log
+*.log
+*.log
